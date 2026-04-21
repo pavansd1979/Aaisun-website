@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aaisun Inventory Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Azure Curator Design System */
+  --primary:#1F7DB7;
+  --primary-dark:#1564A0;
+  --primary-light:#D6EAF6;
+  --secondary:#5F7A92;
+  --tertiary:#A26200;
+  --tertiary-light:#F5E8D0;
+  --neutral:#74777C;
+
+  /* Surface Hierarchy */
+  --bg:#EDF2F6;
+  --surface:#FFFFFF;
+  --surface-low:#F0F5F9;
+  --surface-container:#E3EBF2;
+  --surface-high:#D6E2EC;
+  --surface-highest:#C8D8E6;
+
+  /* Text */
+  --on-surface:#2C3E50;
+  --on-surface-2:#4A6275;
+  --on-surface-3:#7A95A8;
+  --on-surface-4:#A8BEC9;
+
+  /* Status */
+  --green:#0A6B3E;
+  --green-light:#D4F0E3;
+  --green-mid:#7DD4B0;
+  --amber:#A26200;
+  --amber-light:#F5E8D0;
+  --amber-mid:#E4B86A;
+  --red:#B02A2A;
+  --red-light:#F5DADA;
+  --red-mid:#E08080;
+  --blue:#1F7DB7;
+  --blue-light:#D6EAF6;
+  --blue-mid:#7FB8D8;
+  --purple:#5A3EA0;
+  --purple-light:#E8E2F8;
+  --purple-mid:#AFA0DC;
+  --teal:#0A5C46;
+  --teal-light:#D0EDDF;
+
+  /* Ghost border (accessibility) */
+  --ghost:rgba(116,119,124,0.15);
+
+  --radius:6px;
+  --radius-lg:10px;
+  --radius-xl:14px;
+  --font:'Inter',sans-serif;
+  --font-serif:'Noto Serif',serif;
+
+  /* Shadows — ambient, tinted, low opacity */
+  --shadow:0 1px 4px rgba(31,125,183,0.06),0 4px 16px rgba(31,125,183,0.04);
+  --shadow-lg:0 4px 20px rgba(31,125,183,0.10),0 12px 40px rgba(31,125,183,0.06);
+  --shadow-float:0 8px 40px rgba(31,125,183,0.12),0 2px 8px rgba(31,125,183,0.08);
+}
+
+body{font-family:var(--font);background:var(--bg);color:var(--on-surface);font-size:14px;line-height:1.5;height:100vh;overflow:hidden}
+#app{display:flex;height:100vh}
+
+/* ========== SIDEBAR ========== */
+#sidebar{
+  width:256px;background:var(--surface-high);
+  display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;
+}
+.sb-brand{
+  padding:20px 18px 16px;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);
+  display:flex;align-items:center;gap:12px;
+}
+.sb-logo{
+  width:36px;height:36px;border-radius:var(--radius);
+  background:rgba(255,255,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:#fff;
+  font-family:var(--font-serif);flex-shrink:0;
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.25);
+}
+.sb-brand-name{font-size:15px;font-weight:600;color:#fff;font-family:var(--font-serif);letter-spacing:0.01em}
+.sb-brand-sub{font-size:10px;color:rgba(255,255,255,0.7);letter-spacing:0.06em;margin-top:1px}
+
+/* Back to home link */
+.sb-back{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 18px;font-size:11px;color:rgba(255,255,255,0.85);
+  background:rgba(0,0,0,0.1);cursor:pointer;
+  text-decoration:none;transition:background .15s;
+}
+.sb-back:hover{background:rgba(0,0,0,0.18)}
+
+/* Industry tabs */
+.industry-tabs{display:flex;gap:0;background:var(--surface-container);border-bottom:1px solid var(--ghost)}
+.ind-tab{
+  flex:1;font-size:10px;padding:8px 4px;text-align:center;cursor:pointer;
+  color:var(--on-surface-3);font-weight:500;transition:all .15s;
+  border-bottom:2px solid transparent;
+}
+.ind-tab.active{color:var(--primary);border-bottom-color:var(--primary);background:var(--surface-low)}
+.ind-tab:hover:not(.active){background:var(--surface-low);color:var(--on-surface-2)}
+
+/* Company list */
+.co-section{padding:10px 12px;border-bottom:1px solid var(--ghost)}
+.co-list-label{font-size:9px;color:var(--on-surface-3);letter-spacing:0.08em;text-transform:uppercase;padding:0 6px 8px;font-weight:600}
+.co-item{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 8px;border-radius:var(--radius);cursor:pointer;transition:all .12s;
+}
+.co-item:hover{background:var(--surface-container)}
+.co-item.active{background:var(--primary-light)}
+.co-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.co-item-name{font-size:12px;font-weight:500;color:var(--on-surface-2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.co-item.active .co-item-name{color:var(--primary)}
+.co-emp{font-size:10px;color:var(--on-surface-4);font-variant-numeric:tabular-nums}
+
+/* Navigation */
+.sb-nav{padding:10px 12px;flex:1;overflow-y:auto}
+.nav-group-label{font-size:9px;color:var(--on-surface-4);letter-spacing:0.08em;text-transform:uppercase;padding:10px 8px 4px;font-weight:600}
+.nav-item{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 10px;border-radius:var(--radius);
+  font-size:12px;color:var(--on-surface-2);cursor:pointer;transition:all .12s;user-select:none;
+}
+.nav-item:hover{background:var(--surface-container);color:var(--on-surface)}
+.nav-item.active{background:var(--primary-light);color:var(--primary);font-weight:500}
+.nav-icon{width:16px;text-align:center;flex-shrink:0;opacity:0.7}
+.nav-badge{
+  background:var(--tertiary-light);color:var(--tertiary);
+  font-size:10px;padding:1px 6px;border-radius:10px;margin-left:auto;font-weight:600;
+}
+
+/* ========== MAIN ========== */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+#topbar{
+  height:58px;background:var(--surface);
+  display:flex;align-items:center;padding:0 24px;gap:12px;flex-shrink:0;
+  box-shadow:0 1px 0 var(--ghost);
+}
+.tb-title{font-size:18px;font-weight:700;color:var(--on-surface);font-family:var(--font-serif);flex:1;letter-spacing:-0.01em}
+.tb-co{font-size:11px;color:var(--on-surface-3);background:var(--surface-low);padding:4px 10px;border-radius:20px;border:1px solid var(--ghost);white-space:nowrap}
+.tb-ind{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:500;white-space:nowrap}
+.tb-search{
+  padding:7px 14px 7px 32px;border-radius:var(--radius);
+  border:1px solid var(--ghost);background:var(--surface-low);
+  color:var(--on-surface);font-size:12px;font-family:var(--font);width:210px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237A95A8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:10px center;
+}
+.tb-search:focus{outline:none;border-color:var(--primary);background:var(--surface)}
+
+/* Buttons */
+.btn-primary{
+  padding:8px 18px;border-radius:var(--radius);
+  background:linear-gradient(180deg,var(--primary) 0%,var(--primary-dark) 100%);
+  color:#fff;border:none;cursor:pointer;font-size:12px;font-weight:500;font-family:var(--font);
+  transition:all .12s;white-space:nowrap;
+}
+.btn-primary:hover{background:linear-gradient(180deg,var(--primary-dark) 0%,#104E80 100%);transform:translateY(-1px);box-shadow:0 4px 12px rgba(31,125,183,0.3)}
+.btn-secondary{
+  padding:7px 16px;border-radius:var(--radius);
+  background:var(--secondary);color:#fff;
+  border:none;cursor:pointer;font-size:12px;font-weight:500;font-family:var(--font);transition:all .12s;
+}
+.btn-secondary:hover{background:#4A6578}
+.btn-ghost{
+  padding:7px 14px;border-radius:var(--radius);
+  background:transparent;color:var(--on-surface-2);
+  border:1px solid var(--ghost);cursor:pointer;font-size:12px;font-family:var(--font);transition:all .12s;
+}
+.btn-ghost:hover{background:var(--surface-container);color:var(--on-surface)}
+.btn-sm{padding:4px 10px;border-radius:var(--radius);background:transparent;color:var(--on-surface-2);border:1px solid var(--ghost);cursor:pointer;font-size:11px;font-family:var(--font);transition:all .12s}
+.btn-sm:hover{background:var(--surface-low)}
+.btn-sm.danger{color:var(--red);border-color:var(--red-mid)}
+.btn-sm.success{color:var(--green);border-color:var(--green-mid)}
+/* Tertiary CTA: uppercase letter-spaced */
+.btn-tertiary{
+  padding:6px 14px;border-radius:var(--radius);background:transparent;
+  color:var(--tertiary);border:none;cursor:pointer;font-size:10px;font-weight:600;
+  font-family:var(--font);letter-spacing:0.08em;text-transform:uppercase;transition:all .12s;
+}
+.btn-tertiary:hover{background:var(--tertiary-light)}
+
+/* ========== CONTENT AREA ========== */
+#content{flex:1;overflow-y:auto;padding:22px 26px;background:var(--bg)}
+
+/* ========== METRICS ========== */
+.metrics-grid{display:grid;gap:14px;margin-bottom:22px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.metric-card{
+  background:var(--surface);border-radius:var(--radius-lg);padding:18px 20px;
+  box-shadow:var(--shadow);
+}
+.mc-label{font-size:10px;color:var(--on-surface-3);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+.mc-value{font-size:28px;font-weight:700;color:var(--on-surface);font-family:var(--font-serif);letter-spacing:-0.02em;line-height:1}
+.mc-sub{font-size:11px;color:var(--on-surface-4);margin-top:8px}
+.mc-up{color:var(--green)}
+.mc-down{color:var(--red)}
+.mc-accent{color:var(--primary)}
+
+/* ========== CARDS ========== */
+.card{
+  background:var(--surface);border-radius:var(--radius-lg);
+  padding:20px;margin-bottom:18px;box-shadow:var(--shadow);
+}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:600;color:var(--on-surface);font-family:var(--font-serif)}
+.card-subtitle{font-size:11px;color:var(--on-surface-3);margin-top:2px}
+.card-actions{display:flex;gap:8px;align-items:center}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px}
+
+/* ========== TABLES ========== */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{
+  font-size:9px;color:var(--on-surface-3);font-weight:700;text-align:left;
+  padding:8px 14px;background:var(--surface-low);
+  text-transform:uppercase;letter-spacing:0.07em;
+}
+thead th:first-child{border-radius:var(--radius) 0 0 var(--radius)}
+thead th:last-child{border-radius:0 var(--radius) var(--radius) 0}
+tbody tr{transition:background .1s}
+tbody tr:nth-child(even){background:var(--surface-low)}
+tbody tr:hover{background:var(--primary-light)}
+td{padding:10px 14px;color:var(--on-surface);vertical-align:middle}
+td.mono{font-size:11px;color:var(--on-surface-2);font-variant-numeric:tabular-nums;font-family:monospace}
+td.muted{color:var(--on-surface-3);font-size:11px}
+
+/* ========== TAGS ========== */
+.tag{display:inline-flex;align-items:center;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;white-space:nowrap}
+.tag-green{background:var(--green-light);color:var(--green)}
+.tag-amber{background:var(--amber-light);color:var(--amber)}
+.tag-red{background:var(--red-light);color:var(--red)}
+.tag-blue{background:var(--blue-light);color:var(--blue)}
+.tag-purple{background:var(--purple-light);color:var(--purple)}
+.tag-teal{background:var(--teal-light);color:var(--teal)}
+.tag-gray{background:var(--surface-container);color:var(--on-surface-2)}
+
+/* ========== WORKFLOW BAR ========== */
+.wf-bar{
+  display:flex;margin-bottom:22px;border-radius:var(--radius-lg);overflow:hidden;
+  background:var(--surface);box-shadow:var(--shadow);
+}
+.wf-step{
+  flex:1;padding:14px 10px;cursor:pointer;transition:all .12s;
+  text-align:center;position:relative;
+}
+.wf-step:not(:last-child)::after{
+  content:'';position:absolute;right:0;top:20%;height:60%;
+  width:1px;background:var(--ghost);
+}
+.wf-step:hover{background:var(--surface-low)}
+.wf-step.active{background:var(--primary-light)}
+.wf-num{font-size:9px;color:var(--on-surface-4);font-weight:700;letter-spacing:0.06em;margin-bottom:4px}
+.wf-label{font-size:12px;font-weight:600;color:var(--on-surface-2);font-family:var(--font-serif)}
+.wf-step.active .wf-label{color:var(--primary)}
+.wf-count{font-size:10px;margin-top:3px;color:var(--on-surface-3)}
+.wf-step.active .wf-count{color:var(--tertiary);font-weight:600}
+
+/* ========== EMPLOYEES ========== */
+.emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.emp-card{
+  background:var(--surface);border-radius:var(--radius-lg);
+  padding:14px 16px;display:flex;align-items:center;gap:12px;
+  box-shadow:var(--shadow);transition:all .15s;cursor:default;
+}
+.emp-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.emp-avatar{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;flex-shrink:0;font-family:var(--font-serif);
+}
+.emp-name{font-size:13px;font-weight:500;color:var(--on-surface)}
+.emp-role{font-size:10px;color:var(--on-surface-3);margin-top:1px}
+.emp-id{font-size:10px;color:var(--on-surface-4);margin-top:2px;font-family:monospace}
+
+/* ========== LABEL / BARCODE PREVIEW ========== */
+.label-preview{
+  border:2px dashed var(--surface-high);border-radius:var(--radius);
+  padding:20px;background:#fff;font-family:monospace;
+}
+.lp-header{
+  font-size:10px;font-weight:700;color:var(--on-surface-2);
+  border-bottom:2px solid var(--on-surface);padding-bottom:7px;margin-bottom:10px;
+  display:flex;justify-content:space-between;font-family:var(--font-serif);
+}
+.lp-item-name{font-size:17px;font-weight:700;color:var(--on-surface);margin-bottom:10px;font-family:var(--font-serif)}
+.lp-barcode{height:44px;background:repeating-linear-gradient(90deg,#111 0,#111 2px,#fff 2px,#fff 4px),repeating-linear-gradient(90deg,#111 0,#111 1px,#fff 1px,#fff 6px);margin:12px 0;opacity:0.85;border-radius:2px}
+.lp-field{display:flex;justify-content:space-between;padding:3px 0;font-size:11px}
+.lp-key{color:var(--on-surface-3)}
+.lp-val{color:var(--on-surface);font-weight:600}
+.lp-footer{margin-top:12px;font-size:9px;color:var(--on-surface-4);text-align:center;padding-top:8px;border-top:1px solid var(--ghost)}
+
+/* ========== FORMS ========== */
+.form-row{display:grid;gap:14px;margin-bottom:14px}
+.form-group label{font-size:10px;color:var(--on-surface-3);display:block;margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:9px 12px;border-radius:var(--radius);
+  border:1px solid var(--ghost);background:var(--surface-low);
+  color:var(--on-surface);font-size:13px;font-family:var(--font);transition:border-color .12s;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  outline:none;border-color:var(--primary);background:var(--surface);box-shadow:0 0 0 3px rgba(31,125,183,0.08);
+}
+.form-group textarea{resize:vertical;min-height:72px}
+
+/* ========== MODAL — Glassmorphism ========== */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(31,50,70,0.35);
+  display:flex;align-items:center;justify-content:center;z-index:1000;
+  backdrop-filter:blur(8px);
+}
+.modal{
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(24px);
+  border-radius:var(--radius-xl);padding:26px;width:540px;max-height:87vh;overflow-y:auto;
+  box-shadow:var(--shadow-float);border:1px solid rgba(255,255,255,0.6);
+}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.modal-title{font-size:17px;font-weight:700;color:var(--on-surface);font-family:var(--font-serif)}
+.modal-close{
+  width:30px;height:30px;border-radius:var(--radius);background:var(--surface-low);
+  border:none;cursor:pointer;font-size:14px;color:var(--on-surface-3);
+  display:flex;align-items:center;justify-content:center;transition:all .12s;
+}
+.modal-close:hover{background:var(--surface-container);color:var(--on-surface)}
+.modal-footer{
+  display:flex;gap:10px;justify-content:flex-end;margin-top:22px;
+  padding-top:18px;border-top:1px solid var(--ghost);
+}
+
+/* ========== SEARCH BAR ========== */
+.search-bar{
+  width:100%;padding:9px 14px;border-radius:var(--radius);
+  border:1px solid var(--ghost);background:var(--surface-low);
+  color:var(--on-surface);font-size:12px;margin-bottom:16px;font-family:var(--font);
+}
+.search-bar:focus{outline:none;border-color:var(--primary);background:var(--surface);box-shadow:0 0 0 3px rgba(31,125,183,0.08)}
+
+/* ========== PROGRESS ========== */
+.progress-bar{height:5px;background:var(--surface-container);border-radius:3px;overflow:hidden;margin-top:7px}
+.progress-fill{height:100%;border-radius:3px;transition:width .4s}
+
+/* ========== ALERTS ========== */
+.alert{
+  padding:11px 16px;border-radius:var(--radius);margin-bottom:14px;
+  font-size:12px;display:flex;align-items:center;gap:10px;
+}
+.alert-warning{background:var(--amber-light);color:var(--amber)}
+.alert-danger{background:var(--red-light);color:var(--red)}
+.alert-success{background:var(--green-light);color:var(--green)}
+.alert-info{background:var(--blue-light);color:var(--blue)}
+
+/* ========== TABS ========== */
+.tab-row{
+  display:flex;gap:4px;margin-bottom:18px;background:var(--surface-low);
+  padding:4px;border-radius:var(--radius);border:1px solid var(--ghost);
+}
+.tab{padding:6px 16px;border-radius:var(--radius);font-size:12px;font-weight:500;cursor:pointer;color:var(--on-surface-2);transition:all .12s}
+.tab.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow);font-weight:600}
+.tab:hover:not(.active){color:var(--on-surface)}
+
+/* ========== SECTION HEADER ========== */
+.section-title{font-family:var(--font-serif);font-size:22px;font-weight:700;color:var(--on-surface);margin-bottom:4px}
+.section-desc{font-size:12px;color:var(--on-surface-3);margin-bottom:20px}
+
+/* ========== PRINT ========== */
+@media print{
+  #sidebar,#topbar,.btn-primary,.btn-ghost,.btn-sm,.card-actions{display:none!important}
+  #content{padding:0}
+  body,#app,#main{height:auto;overflow:visible}
+  .label-preview{border:2px solid #000;break-inside:avoid}
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--surface-high);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--secondary)}
+
+/* ========== KPI MINI CHARTS (CSS only) ========== */
+.sparkbar{display:flex;align-items:flex-end;gap:2px;height:24px;margin-top:8px}
+.sparkbar span{flex:1;background:var(--primary-light);border-radius:2px;transition:height .3s}
+.sparkbar span.hi{background:var(--primary)}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">A</div>
+    <div>
+      <div class="sb-brand-name">Aaisun</div>
+      <div class="sb-brand-sub">INVENTORY SUITE v3.0</div>
+    </div>
+  </div>
+  <a class="sb-back" href="index.html">← Back to Project Hub</a>
+
+  <div class="industry-tabs">
+    <div class="ind-tab active" onclick="switchIndustry('ins',this)" title="Insurance">🛡 Ins</div>
+    <div class="ind-tab" onclick="switchIndustry('auto',this)" title="Automotive">🚗 Auto</div>
+    <div class="ind-tab" onclick="switchIndustry('med',this)" title="Media">🎬 Media</div>
+  </div>
+
+  <div class="co-section">
+    <div class="co-list-label" id="co-list-label">Insurance Companies</div>
+    <div id="co-list"></div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="nav-group-label">Operations</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">◼</span>Dashboard</div>
+    <div class="nav-item" onclick="showPage('receiving',this)"><span class="nav-icon">↓</span>Receiving<span class="nav-badge" id="nb-recv">4</span></div>
+    <div class="nav-item" onclick="showPage('storage',this)"><span class="nav-icon">□</span>Storage</div>
+    <div class="nav-item" onclick="showPage('picking',this)"><span class="nav-icon">◎</span>Pick &amp; Pack<span class="nav-badge" id="nb-pick">7</span></div>
+    <div class="nav-item" onclick="showPage('shipping',this)"><span class="nav-icon">↑</span>Shipping</div>
+    <div class="nav-item" onclick="showPage('labelling',this)"><span class="nav-icon">▬</span>Labelling</div>
+    <div class="nav-group-label">Procurement</div>
+    <div class="nav-item" onclick="showPage('purchase_orders',this)"><span class="nav-icon">📋</span>Purchase Orders<span class="nav-badge" id="nb-po">3</span></div>
+    <div class="nav-item" onclick="showPage('suppliers',this)"><span class="nav-icon">🏢</span>Suppliers</div>
+    <div class="nav-item" onclick="showPage('returns',this)"><span class="nav-icon">↩</span>Returns<span class="nav-badge" id="nb-ret">2</span></div>
+    <div class="nav-group-label">Manage</div>
+    <div class="nav-item" onclick="showPage('inventory',this)"><span class="nav-icon">≡</span>Inventory</div>
+    <div class="nav-item" onclick="showPage('employees',this)"><span class="nav-icon">👤</span>Employees</div>
+    <div class="nav-item" onclick="showPage('barcode',this)"><span class="nav-icon">▬</span>Barcode Scanner</div>
+    <div class="nav-item" onclick="showPage('reports',this)"><span class="nav-icon">📊</span>Reports</div>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="topbar">
+    <div class="tb-title" id="tb-title">Dashboard</div>
+    <span class="tb-ind tag tag-blue" id="tb-ind">Insurance</span>
+    <span class="tb-co" id="tb-co">Aaisun Shield Insurance</span>
+    <input class="tb-search" placeholder="Search products, SKUs, orders..." id="globalSearch" oninput="globalSearchFn(this.value)">
+    <button class="btn-ghost" onclick="window.print()">🖨 Print</button>
+    <button class="btn-primary" id="tb-action" onclick="openNewModal()">+ New Entry</button>
+  </div>
+  <div id="content"></div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" style="display:none" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">New Entry</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// =============================================================
+// DESIGN TOKENS (for JS-generated content)
+// =============================================================
+const C_PRIMARY='#1F7DB7',C_SECONDARY='#5F7A92',C_TERTIARY='#A26200';
+const C_GREEN='#0A6B3E',C_AMBER='#A26200',C_RED='#B02A2A',C_BLUE='#1F7DB7',C_PURPLE='#5A3EA0';
+
+// =============================================================
+// DATA — 3 INDUSTRIES × 4 COMPANIES × 50 PRODUCTS
+// =============================================================
+
+const INS_ITEMS = [
+  "Policy Folders","Claim Forms","Identity Cards","Product Brochures","Office Stationery",
+  "Filing Kits","Promo Banners","Padded Envelopes","Signature Pads","Stamp Kits",
+  "Welcome Packs","Renewal Kits","Agent Bags","Document Sleeves","Compliance Binders",
+  "Policy Binders","Certificate Packs","Legal Forms","Seals & Stamps","Letterheads",
+  "Correction Fluid","Bond Papers","Archival Boxes","Franking Rolls","Receipt Books",
+  "Claim Envelopes","ID Lanyards","Badge Holders","Secure Pouches","Notary Stamps",
+  "Electronic Signature Devices","Policy Audit Kits","Training Manuals","Safety Helmets","First Aid Kits",
+  "Desk Organizers","Whiteboard Markers","Presentation Folders","Conference Notebooks","USB Drive Packs",
+  "Shredder Bags","Document Trolleys","Index Card Sets","Rubber Band Boxes","Paper Clips Boxes",
+  "Stapler Kits","Report Covers","Lamination Pouches","Toner Cartridges","Thermal Paper Rolls"
+];
+
+const AUTO_ITEMS = [
+  "Engine Block Sets","Brake Assemblies","Transmission Kits","Head Gaskets","M12 Bolt Packs",
+  "Oil Filter Units","Wiring Harnesses","Exhaust Manifolds","Piston Rings","Timing Chains",
+  "Valve Springs","Camshaft Sets","Cooling Radiators","Turbocharger Kits","Fuel Injectors",
+  "Suspension Arms","Wheel Bearings","CV Joints","Clutch Plates","Alternators",
+  "O2 Sensors","ABS Modules","Power Steering Pumps","Strut Assemblies","Tie Rod Ends",
+  "Starter Motors","Ignition Coils","Drive Shafts","Air Filters","Spark Plugs",
+  "Brake Pads","Shock Absorbers","Coolant Hoses","Serpentine Belts","Battery Terminals",
+  "AC Compressors","Windshield Wipers","Headlight Assemblies","Tail Light Units","Door Handle Sets",
+  "Mirror Assemblies","Seat Belt Kits","Airbag Modules","Hood Release Cables","Cabin Air Filters",
+  "Transmission Fluid Packs","Differential Gear Sets","Body Panel Kits","Exhaust Silencers","Throttle Bodies"
+];
+
+const MED_ITEMS = [
+  "4K Camera Bodies","LED Lighting Rigs","XLR Cable Sets","256GB Memory Cards","Props Storage Boxes",
+  "Editing SSDs","Chroma Key Screens","Studio Microphones","Reflector Panels","Tripod Sets",
+  "Drone Units","Monitor Arms","USB-C Hubs","Hard Drive Arrays","Colour Gel Packs",
+  "Trade Book Stock","Magazine Bundles","Printing Reels","Thermal Binding Kits","Magenta Ink Cartridges",
+  "Shrink Wrap Film","Proof Copy Sets","Archive Boxes","Cover Laminate Rolls","Spine Tape Packs",
+  "ISBN Sticker Rolls","Distribution Crates","Cardboard Inners","Tissue Interleaves","CD Sleeves",
+  "Podcast Mixers","Lavalier Microphones","Boom Arm Sets","Audio Interface Units","Pop Filter Packs",
+  "Studio Monitor Speakers","Camera Stabilizers","Lens Filter Sets","ND Filter Kits","Wireless Transmitters",
+  "Teleprompter Units","Video Switchers","Streaming Encoders","Green Screen Stands","Sound Dampening Foam",
+  "Cable Management Kits","Broadcast Headphones","Field Recorder Units","Video Projector Lamps","Colour Grading Monitors"
+];
+
+const COMPANIES = {
+  // ── INSURANCE ────────────────────────────────────────────
+  ins1:{id:"ins1",name:"Aaisun Shield Insurance",short:"ASI",industry:"Insurance",ind:"ins",
+    color:C_BLUE,light:"#D6EAF6",tagClass:"tag-blue",emp:50,items:INS_ITEMS},
+  ins2:{id:"ins2",name:"Aaisun Protect Group",short:"APG",industry:"Insurance",ind:"ins",
+    color:C_BLUE,light:"#D6EAF6",tagClass:"tag-blue",emp:50,items:INS_ITEMS},
+  ins3:{id:"ins3",name:"Aaisun Risk Advisors",short:"ARA",industry:"Insurance",ind:"ins",
+    color:C_BLUE,light:"#D6EAF6",tagClass:"tag-blue",emp:50,items:INS_ITEMS},
+  ins4:{id:"ins4",name:"Aaisun Premier Life",short:"APL",industry:"Insurance",ind:"ins",
+    color:C_BLUE,light:"#D6EAF6",tagClass:"tag-blue",emp:50,items:INS_ITEMS},
+  // ── AUTOMOTIVE ───────────────────────────────────────────
+  auto1:{id:"auto1",name:"Aaisun MotorWorks",short:"AMW",industry:"Automotive",ind:"auto",
+    color:C_AMBER,light:"#F5E8D0",tagClass:"tag-amber",emp:50,items:AUTO_ITEMS},
+  auto2:{id:"auto2",name:"Aaisun AutoParts Co.",short:"AAP",industry:"Automotive",ind:"auto",
+    color:C_AMBER,light:"#F5E8D0",tagClass:"tag-amber",emp:50,items:AUTO_ITEMS},
+  auto3:{id:"auto3",name:"Aaisun Drive Systems",short:"ADS",industry:"Automotive",ind:"auto",
+    color:C_AMBER,light:"#F5E8D0",tagClass:"tag-amber",emp:50,items:AUTO_ITEMS},
+  auto4:{id:"auto4",name:"Aaisun Fleet Solutions",short:"AFS",industry:"Automotive",ind:"auto",
+    color:C_AMBER,light:"#F5E8D0",tagClass:"tag-amber",emp:50,items:AUTO_ITEMS},
+  // ── MEDIA ────────────────────────────────────────────────
+  med1:{id:"med1",name:"Aaisun Media Studios",short:"AMS",industry:"Media",ind:"med",
+    color:C_PURPLE,light:"#E8E2F8",tagClass:"tag-purple",emp:50,items:MED_ITEMS},
+  med2:{id:"med2",name:"Aaisun Publishing House",short:"APH",industry:"Media",ind:"med",
+    color:C_PURPLE,light:"#E8E2F8",tagClass:"tag-purple",emp:50,items:MED_ITEMS},
+  med3:{id:"med3",name:"Aaisun Broadcast Corp.",short:"ABC",industry:"Media",ind:"med",
+    color:C_PURPLE,light:"#E8E2F8",tagClass:"tag-purple",emp:50,items:MED_ITEMS},
+  med4:{id:"med4",name:"Aaisun Digital Labs",short:"ADL",industry:"Media",ind:"med",
+    color:C_PURPLE,light:"#E8E2F8",tagClass:"tag-purple",emp:50,items:MED_ITEMS},
+};
+
+const INDUSTRIES = {ins:"Insurance",auto:"Automotive",med:"Media"};
+const IND_TAG = {ins:"tag-blue",auto:"tag-amber",med:"tag-purple"};
+
+const ROLES=["Warehouse Manager","Inventory Lead","Sr. Receiving Clerk","Storage Handler","Pick Coordinator","Pack Specialist","Shipping Officer","Label Operator","Logistics Analyst","Quality Inspector","Procurement Officer","Returns Handler","Barcode Technician","Data Entry Clerk","Safety Officer"];
+const FNAMES=["Arjun","Priya","Rohan","Sneha","Vikram","Anita","Suresh","Meera","Kiran","Rahul","Divya","Amit","Pooja","Sanjay","Neha","Vijay","Lakshmi","Ajay","Kavita","Ravi","Sunita","Deepak","Ananya","Manish","Preeti","Nikhil","Swati","Aakash","Rekha","Tarun","Geeta","Anil","Shilpa","Mukesh","Radha","Satish","Pallavi","Rajesh","Seema","Mohan","Bhavana","Girish","Vandana","Harish","Savita","Dinesh","Usha","Prakash","Leela","Naveen"];
+const LNAMES=["Sharma","Patel","Kumar","Singh","Mehta","Gupta","Joshi","Nair","Reddy","Iyer","Shah","Verma","Pandey","Rao","Kapoor","Mishra","Sinha","Das","Pillai","Menon"];
+const CARRIERS=["BlueDart","FedEx","DTDC","Delhivery","Ecom Express","XpressBees","Amazon Logistics","India Post"];
+const ZONES=["Zone A-01","Zone A-02","Zone B-01","Zone B-02","Zone C-01","Zone C-02","Zone D-01","Zone D-02","Zone E-01","Zone E-02"];
+
+const SUPPLIERS = [
+  {id:"SUP-001",name:"Bharat Supply Co.",contact:"Ramesh Agarwal",phone:"+91 98201 11234",email:"ramesh@bharatsupply.in",city:"Mumbai",rating:4.8,items:120,status:"Active"},
+  {id:"SUP-002",name:"Delhi Office Depot",contact:"Sunita Kapoor",phone:"+91 98112 22345",email:"sunita@delhidepot.in",city:"New Delhi",rating:4.5,items:87,status:"Active"},
+  {id:"SUP-003",name:"Southern Stationery",contact:"Venkat Rao",phone:"+91 94400 33456",email:"venkat@sstationery.in",city:"Chennai",rating:4.2,items:54,status:"Active"},
+  {id:"SUP-004",name:"Kolkata Parts Hub",contact:"Dipak Bose",phone:"+91 98310 44567",email:"dipak@kolkataparts.in",city:"Kolkata",rating:3.9,items:201,status:"Inactive"},
+  {id:"SUP-005",name:"Pune Industrial Ltd.",contact:"Anjali Joshi",phone:"+91 98220 55678",email:"anjali@puneindustrial.in",city:"Pune",rating:4.7,items:340,status:"Active"},
+  {id:"SUP-006",name:"Hyderabad Tech Supplies",contact:"Srikanth Reddy",phone:"+91 93000 66789",email:"srikanth@hydsupplies.in",city:"Hyderabad",rating:4.6,items:178,status:"Active"},
+  {id:"SUP-007",name:"Ahmedabad Mfg. Works",contact:"Nilesh Shah",phone:"+91 96300 77890",email:"nilesh@amdmfg.in",city:"Ahmedabad",rating:4.4,items:250,status:"Active"},
+  {id:"SUP-008",name:"Bengaluru Tech Parts",contact:"Pradeep Nair",phone:"+91 90080 88901",email:"pradeep@btparts.in",city:"Bengaluru",rating:4.3,items:195,status:"Active"},
+];
+
+let currentCo="ins1",currentInd="ins",activePage="dashboard";
+
+// =============================================================
+// DATA GENERATORS
+// =============================================================
+const QTY_BASE  =[245,68,312,18,0,88,142,3,200,55,170,95,30,410,76,122,8,290,44,160,210,36,0,185,73,400,28,155,90,320,15,265,110,48,195,340,22,135,60,280,7,175,92,0,230,145,38,100,255,82];
+const MIN_BASE  =[50,20,100,50,30,25,40,10,60,15,50,30,10,80,20,40,10,80,20,50,60,15,30,40,25,90,10,50,30,70,10,60,35,15,55,80,10,40,20,75,5,45,25,30,60,40,15,30,65,20];
+const COST_BASE =[120,450,800,35,1200,75,380,90,220,160,310,185,50,950,42,275,18,680,140,320,88,510,240,165,72,1100,55,420,195,740,28,580,310,125,460,890,38,750,200,1350,95,600,280,45,370,1200,62,490,220,175];
+const STATUSES  =["In Stock","In Stock","In Stock","In Stock","Low Stock","Out of Stock","Reserved","In Transit","In Stock","In Stock"];
+const MOVED     =["Today","Yesterday","2d ago","Today","3d ago","Today","Yesterday","4d ago","Today","1d ago","5d ago","Today","2d ago","Yesterday","Today","3d ago","Today","Yesterday","2d ago","Today","Today","1d ago","4d ago","Today","Yesterday"];
+
+function getInv(coId){
+  const co=COMPANIES[coId];
+  return co.items.map((item,i)=>({
+    sku:"SKU-"+co.short+"-"+String(100+i),
+    name:item,
+    qty:QTY_BASE[i],
+    min_qty:MIN_BASE[i],
+    zone:ZONES[i%ZONES.length],
+    supplier:SUPPLIERS[i%SUPPLIERS.length].name,
+    status:STATUSES[i%STATUSES.length],
+    lastMoved:MOVED[i%MOVED.length],
+    cost:COST_BASE[i],
+  }));
+}
+
+function getEmps(coId){
+  return FNAMES.map((f,i)=>({
+    name:f+" "+LNAMES[i%LNAMES.length],role:ROLES[i%ROLES.length],
+    id:"EMP-"+String(i+1).padStart(3,"0"),
+    initials:f[0]+LNAMES[i%LNAMES.length][0],
+    bg:["#D6EAF6","#D4F0E3","#E8E2F8","#F5E8D0","#F5DADA"][i%5],
+    fg:["#1F7DB7","#0A6B3E","#5A3EA0","#A26200","#B02A2A"][i%5],
+    shift:["Morning","Afternoon","Night"][i%3],
+    phone:"+91 9"+String(8000000000+i*7),
+    joined:["Jan 2022","Mar 2021","Jul 2023","Nov 2020","Feb 2024"][i%5],
+  }));
+}
+
+function getPOs(coId){
+  const co=COMPANIES[coId],inv=getInv(coId);
+  return [
+    {id:"PO-2026-001",supplier:SUPPLIERS[0].name,item:inv[0].name,qty:200,unit_cost:COST_BASE[0],total:200*COST_BASE[0],status:"Approved",date:"Apr 15",delivery:"Apr 22",raised_by:FNAMES[0]+" "+LNAMES[0]},
+    {id:"PO-2026-002",supplier:SUPPLIERS[1].name,item:inv[1].name,qty:100,unit_cost:COST_BASE[1],total:100*COST_BASE[1],status:"Pending",date:"Apr 17",delivery:"Apr 25",raised_by:FNAMES[2]+" "+LNAMES[2]},
+    {id:"PO-2026-003",supplier:SUPPLIERS[2].name,item:inv[2].name,qty:50,unit_cost:COST_BASE[2],total:50*COST_BASE[2],status:"Pending",date:"Apr 18",delivery:"Apr 28",raised_by:FNAMES[5]+" "+LNAMES[5]},
+    {id:"PO-2026-004",supplier:SUPPLIERS[3].name,item:inv[3].name,qty:500,unit_cost:COST_BASE[3],total:500*COST_BASE[3],status:"Approved",date:"Apr 10",delivery:"Apr 19",raised_by:FNAMES[8]+" "+LNAMES[8]},
+    {id:"PO-2026-005",supplier:SUPPLIERS[4].name,item:inv[4].name,qty:80,unit_cost:COST_BASE[4],total:80*COST_BASE[4],status:"Received",date:"Apr 5",delivery:"Apr 14",raised_by:FNAMES[12]+" "+LNAMES[12]},
+    {id:"PO-2026-006",supplier:SUPPLIERS[5].name,item:inv[5].name,qty:150,unit_cost:COST_BASE[5],total:150*COST_BASE[5],status:"Pending",date:"Apr 19",delivery:"Apr 27",raised_by:FNAMES[15]+" "+LNAMES[15]},
+  ];
+}
+
+function getReturns(coId){
+  const inv=getInv(coId);
+  return [
+    {id:"RET-001",item:inv[0].name,sku:inv[0].sku,qty:5,reason:"Damaged in transit",status:"Pending",date:"Apr 17",handler:FNAMES[3]+" "+LNAMES[3],carrier:CARRIERS[0],refund:inv[0].cost*5},
+    {id:"RET-002",item:inv[2].name,sku:inv[2].sku,qty:2,reason:"Wrong item shipped",status:"In Progress",date:"Apr 16",handler:FNAMES[7]+" "+LNAMES[7],carrier:CARRIERS[1],refund:inv[2].cost*2},
+    {id:"RET-003",item:inv[4].name,sku:inv[4].sku,qty:10,reason:"Quality issue",status:"Approved",date:"Apr 14",handler:FNAMES[1]+" "+LNAMES[1],carrier:CARRIERS[2],refund:inv[4].cost*10},
+    {id:"RET-004",item:inv[6].name,sku:inv[6].sku,qty:1,reason:"Customer cancelled",status:"Refunded",date:"Apr 12",handler:FNAMES[9]+" "+LNAMES[9],carrier:CARRIERS[3],refund:inv[6].cost},
+    {id:"RET-005",item:inv[9].name,sku:inv[9].sku,qty:3,reason:"Packaging damaged",status:"Pending",date:"Apr 18",handler:FNAMES[13]+" "+LNAMES[13],carrier:CARRIERS[4],refund:inv[9].cost*3},
+  ];
+}
+
+function getShipments(){
+  const inv=getInv(currentCo);
+  return [
+    {id:"SHP-001",order:"ORD-009",item:inv[0].name,qty:50,carrier:CARRIERS[0],tracking:"BD982612345",dest:"Mumbai",status:"Dispatched",date:"Apr 18"},
+    {id:"SHP-002",order:"ORD-012",item:inv[1].name,qty:120,carrier:CARRIERS[1],tracking:"FX123487654",dest:"Delhi",status:"Scheduled",date:"Apr 19"},
+    {id:"SHP-003",order:"ORD-015",item:inv[2].name,qty:30,carrier:CARRIERS[2],tracking:"DT445521678",dest:"Bangalore",status:"Delivered",date:"Apr 17"},
+    {id:"SHP-004",order:"ORD-017",item:inv[3].name,qty:85,carrier:CARRIERS[3],tracking:"DL998876432",dest:"Chennai",status:"Dispatched",date:"Apr 18"},
+    {id:"SHP-005",order:"ORD-021",item:inv[4].name,qty:200,carrier:CARRIERS[4],tracking:"EC451223877",dest:"Hyderabad",status:"Scheduled",date:"Apr 19"},
+    {id:"SHP-006",order:"ORD-022",item:inv[5].name,qty:15,carrier:CARRIERS[5],tracking:"XB998812345",dest:"Pune",status:"Delivered",date:"Apr 16"},
+    {id:"SHP-007",order:"ORD-025",item:inv[6].name,qty:40,carrier:CARRIERS[0],tracking:"BD112234567",dest:"Ahmedabad",status:"Dispatched",date:"Apr 18"},
+  ];
+}
+
+function getPickOrders(){
+  const inv=getInv(currentCo);
+  return [
+    {id:"PICK-001",item:inv[0].name,sku:inv[0].sku,zone:inv[0].zone,qty:50,order:"ORD-009",assignee:FNAMES[2]+" "+LNAMES[2],status:"In Progress",priority:"High",date:"Apr 19"},
+    {id:"PICK-002",item:inv[1].name,sku:inv[1].sku,zone:inv[1].zone,qty:120,order:"ORD-012",assignee:FNAMES[5]+" "+LNAMES[5],status:"Pending",priority:"Medium",date:"Apr 19"},
+    {id:"PICK-003",item:inv[2].name,sku:inv[2].sku,zone:inv[2].zone,qty:30,order:"ORD-015",assignee:FNAMES[8]+" "+LNAMES[8],status:"Packed",priority:"Low",date:"Apr 18"},
+    {id:"PICK-004",item:inv[3].name,sku:inv[3].sku,zone:inv[3].zone,qty:85,order:"ORD-017",assignee:FNAMES[1]+" "+LNAMES[1],status:"Pending",priority:"High",date:"Apr 19"},
+    {id:"PICK-005",item:inv[4].name,sku:inv[4].sku,zone:inv[4].zone,qty:200,order:"ORD-021",assignee:FNAMES[6]+" "+LNAMES[6],status:"In Progress",priority:"Medium",date:"Apr 18"},
+    {id:"PICK-006",item:inv[5].name,sku:inv[5].sku,zone:inv[5].zone,qty:15,order:"ORD-025",assignee:FNAMES[9]+" "+LNAMES[9],status:"Packed",priority:"Low",date:"Apr 17"},
+    {id:"PICK-007",item:inv[6].name,sku:inv[6].sku,zone:inv[6].zone,qty:90,order:"ORD-028",assignee:FNAMES[11]+" "+LNAMES[11],status:"Pending",priority:"High",date:"Apr 19"},
+  ];
+}
+
+function getRecvOrders(){
+  const inv=getInv(currentCo);
+  return [
+    {id:"RCV-001",item:inv[0].name,sku:inv[0].sku,qty:200,supplier:SUPPLIERS[0].name,po:"PO-2026-004",assignee:FNAMES[3]+" "+LNAMES[3],status:"Pending",date:"Apr 19"},
+    {id:"RCV-002",item:inv[1].name,sku:inv[1].sku,qty:100,supplier:SUPPLIERS[1].name,po:"PO-2026-002",assignee:FNAMES[6]+" "+LNAMES[6],status:"In Progress",date:"Apr 18"},
+    {id:"RCV-003",item:inv[2].name,sku:inv[2].sku,qty:50,supplier:SUPPLIERS[2].name,po:"PO-2026-001",assignee:FNAMES[9]+" "+LNAMES[9],status:"Complete",date:"Apr 17"},
+    {id:"RCV-004",item:inv[3].name,sku:inv[3].sku,qty:500,supplier:SUPPLIERS[4].name,po:"PO-2026-003",assignee:FNAMES[12]+" "+LNAMES[12],status:"Pending",date:"Apr 19"},
+  ];
+}
+
+// =============================================================
+// UTILITIES
+// =============================================================
+const TAG_MAP={
+  "In Stock":"tag-green","Low Stock":"tag-amber","Out of Stock":"tag-red","Reserved":"tag-blue","In Transit":"tag-teal",
+  "Pending":"tag-amber","In Progress":"tag-blue","Complete":"tag-green","Packed":"tag-teal",
+  "Dispatched":"tag-blue","Delivered":"tag-green","Scheduled":"tag-gray",
+  "Approved":"tag-green","Received":"tag-teal","Refunded":"tag-green","Active":"tag-green","Inactive":"tag-gray",
+  "High":"tag-red","Medium":"tag-amber","Low":"tag-green"
+};
+function tag(s){return`<span class="tag ${TAG_MAP[s]||'tag-gray'}">${s}</span>`}
+function ₹(n){return"₹"+Number(n).toLocaleString("en-IN")}
+function filterRows(input,tableId){
+  const q=input.value.toLowerCase();
+  document.querySelectorAll(`#${tableId} tbody tr`).forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'none'});
+}
+
+function switchIndustry(ind,el){
+  currentInd=ind;
+  document.querySelectorAll(".ind-tab").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
+  const cos=Object.values(COMPANIES).filter(c=>c.ind===ind);
+  currentCo=cos[0].id;
+  renderCoList();
+  updateTopbar();
+  showPage(activePage);
+}
+
+function renderCoList(){
+  const cos=Object.values(COMPANIES).filter(c=>c.ind===currentInd);
+  document.getElementById("co-list-label").textContent=INDUSTRIES[currentInd]+" Companies";
+  document.getElementById("co-list").innerHTML=cos.map(c=>`
+    <div class="co-item ${c.id===currentCo?'active':''}" onclick="selectCo('${c.id}')">
+      <div class="co-dot" style="background:${c.color}"></div>
+      <div class="co-item-name">${c.name}</div>
+      <div class="co-emp">${c.emp}</div>
+    </div>`).join('');
+}
+
+function selectCo(id){
+  currentCo=id;renderCoList();updateTopbar();showPage(activePage);
+}
+
+function updateTopbar(){
+  const co=COMPANIES[currentCo];
+  document.getElementById("tb-co").textContent=co.name;
+  document.getElementById("tb-ind").textContent=INDUSTRIES[currentInd];
+  document.getElementById("tb-ind").className="tb-ind tag "+IND_TAG[currentInd];
+}
+
+function globalSearchFn(q){
+  if(!q)return;
+  showPage("inventory");
+  setTimeout(()=>{
+    document.querySelectorAll("#mainTable tbody tr").forEach(r=>{
+      r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';
+    });
+  },50);
+}
+
+// =============================================================
+// MODAL
+// =============================================================
+function openNewModal(){
+  const page=activePage,co=COMPANIES[currentCo],inv=getInv(currentCo);
+  let title="New Entry",body="";
+  if(page==="inventory"||page==="dashboard"){
+    title="Add Inventory Item";
+    body=`<div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Item Name</label><input placeholder="e.g. Engine Block Set"></div>
+      <div class="form-group"><label>SKU</label><input value="SKU-${co.short}-${Math.floor(Math.random()*900+100)}"></div></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="form-group"><label>Quantity</label><input type="number" value="0"></div>
+      <div class="form-group"><label>Min Qty</label><input type="number" value="10"></div>
+      <div class="form-group"><label>Unit Cost (₹)</label><input type="number" value="0"></div></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Zone</label><select>${ZONES.map(z=>`<option>${z}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Supplier</label><select>${SUPPLIERS.map(s=>`<option>${s.name}</option>`).join('')}</select></div></div>
+    <div class="modal-footer"><button class="btn-ghost" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="closeModal();showToast('Item added successfully!')">Add Item</button></div>`;
+  }else if(page==="purchase_orders"){
+    title="Raise Purchase Order";
+    body=`<div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Supplier</label><select>${SUPPLIERS.map(s=>`<option>${s.name}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Expected Delivery</label><input type="date" value="2026-04-28"></div></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Item</label><select>${inv.map(i=>`<option>${i.name}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Quantity</label><input type="number" value="100"></div></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Unit Cost (₹)</label><input type="number" value="0"></div>
+      <div class="form-group"><label>Priority</label><select><option>Normal</option><option>Urgent</option><option>Low</option></select></div></div>
+    <div class="form-group"><label>Notes</label><textarea placeholder="Additional procurement notes..."></textarea></div>
+    <div class="modal-footer"><button class="btn-ghost" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="closeModal();showToast('Purchase order raised!')">Raise PO</button></div>`;
+  }else if(page==="returns"){
+    title="Log Return";
+    body=`<div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Item</label><select>${inv.map(i=>`<option>${i.name}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Quantity</label><input type="number" value="1"></div></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Reason</label><select><option>Damaged in transit</option><option>Wrong item shipped</option><option>Quality issue</option><option>Customer cancelled</option><option>Packaging damaged</option></select></div>
+      <div class="form-group"><label>Carrier</label><select>${CARRIERS.map(c=>`<option>${c}</option>`).join('')}</select></div></div>
+    <div class="form-group"><label>Notes</label><textarea placeholder="Describe the return in detail..."></textarea></div>
+    <div class="modal-footer"><button class="btn-ghost" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="closeModal();showToast('Return logged!')">Log Return</button></div>`;
+  }else if(page==="receiving"){
+    title="Receive Shipment";
+    body=`<div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>PO Reference</label><select>${getPOs(currentCo).map(p=>`<option>${p.id} — ${p.item.substring(0,20)}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Received Qty</label><input type="number" value="0"></div></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Received By</label><select>${getEmps(currentCo).slice(0,10).map(e=>`<option>${e.name}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Condition</label><select><option>Good</option><option>Damaged</option><option>Partial</option></select></div></div>
+    <div class="form-group"><label>Inspection Remarks</label><textarea placeholder="Describe condition and any issues..."></textarea></div>
+    <div class="modal-footer"><button class="btn-ghost" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="closeModal();showToast('Receipt logged!')">Confirm Receipt</button></div>`;
+  }else if(page==="shipping"){
+    title="Create Shipment";
+    body=`<div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Order ID</label><input value="ORD-${Math.floor(Math.random()*900+100)}"></div>
+      <div class="form-group"><label>Carrier</label><select>${CARRIERS.map(c=>`<option>${c}</option>`).join('')}</select></div></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Item</label><select>${inv.slice(0,10).map(i=>`<option>${i.name}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Quantity</label><input type="number" value="1"></div></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Destination City</label><input placeholder="e.g. Mumbai"></div>
+      <div class="form-group"><label>Ship Date</label><input type="date" value="2026-04-21"></div></div>
+    <div class="modal-footer"><button class="btn-ghost" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="closeModal();showToast('Shipment created!')">Create Shipment</button></div>`;
+  }else{
+    title="New Entry";
+    body=`<p style="color:var(--on-surface-2);font-size:13px;margin-bottom:20px">Navigate to a specific section to add relevant data entries.</p>
+    <div class="modal-footer"><button class="btn-ghost" onclick="closeModal()">Close</button></div>`;
+  }
+  document.getElementById("modal-title").textContent=title;
+  document.getElementById("modal-body").innerHTML=body;
+  document.getElementById("modal").style.display="flex";
+}
+function closeModal(e){if(!e||e.target===document.getElementById("modal"))document.getElementById("modal").style.display="none";}
+
+// Toast notification
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:24px;right:24px;background:#1F7DB7;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(31,125,183,0.3);z-index:9999;transition:opacity .3s';document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._timer);t._timer=setTimeout(()=>t.style.opacity='0',2500);
+}
+
+// =============================================================
+// PAGES
+// =============================================================
+function showPage(page,navEl){
+  activePage=page;
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+  if(navEl)navEl.classList.add("active");
+  else{const map={dashboard:"Dashboard",receiving:"Receiving",storage:"Storage",picking:"Pick",shipping:"Shipping",labelling:"Labelling",purchase_orders:"Purchase",suppliers:"Suppliers",returns:"Returns",inventory:"Inventory",employees:"Employees",barcode:"Barcode",reports:"Reports"};
+    document.querySelectorAll(".nav-item").forEach(n=>{if(map[page]&&n.textContent.includes(map[page]))n.classList.add("active")});}
+  const titles={dashboard:"Dashboard",receiving:"Receiving",storage:"Storage",picking:"Pick & Pack",shipping:"Shipping",labelling:"Labelling",purchase_orders:"Purchase Orders",suppliers:"Suppliers",returns:"Returns",inventory:"Inventory",employees:"Employees",barcode:"Barcode Scanner",reports:"Reports"};
+  document.getElementById("tb-title").textContent=titles[page]||page;
+  const C=document.getElementById("content"),co=COMPANIES[currentCo],inv=getInv(currentCo);
+  if(page==="dashboard")renderDashboard(C,co,inv);
+  else if(page==="receiving")renderReceiving(C,co,inv);
+  else if(page==="storage")renderStorage(C,co,inv);
+  else if(page==="picking")renderPicking(C,co,inv);
+  else if(page==="shipping")renderShipping(C,co,inv);
+  else if(page==="labelling")renderLabelling(C,co,inv);
+  else if(page==="purchase_orders")renderPOs(C,co,inv);
+  else if(page==="suppliers")renderSuppliers(C,co,inv);
+  else if(page==="returns")renderReturns(C,co,inv);
+  else if(page==="inventory")renderInventory(C,co,inv);
+  else if(page==="employees")renderEmployees(C,co,inv);
+  else if(page==="barcode")renderBarcode(C,co,inv);
+  else if(page==="reports")renderReports(C,co,inv);
+}
+
+// =============================================================
+// DASHBOARD
+// =============================================================
+function renderDashboard(C,co,inv){
+  const inStock=inv.filter(i=>i.status==="In Stock").length;
+  const low=inv.filter(i=>i.status==="Low Stock").length;
+  const out=inv.filter(i=>i.status==="Out of Stock").length;
+  const totalVal=inv.reduce((a,b)=>a+b.qty*b.cost,0);
+  const reserved=inv.filter(i=>i.status==="Reserved").length;
+  C.innerHTML=`
+  ${low>0?`<div class="alert alert-warning">⚠ ${low} item(s) are running low — consider raising a purchase order soon.</div>`:''}
+  ${out>0?`<div class="alert alert-danger">✕ ${out} item(s) are out of stock. Urgent reorder required.</div>`:''}
+  <div class="metrics-grid g4">
+    <div class="metric-card">
+      <div class="mc-label">Total SKUs</div>
+      <div class="mc-value mc-accent">${inv.length}</div>
+      <div class="mc-sub">▲ 3 added this week</div>
+      <div class="sparkbar">${[30,45,60,40,75,55,80,65,70,90].map((h,i)=>`<span style="height:${h}%" class="${i===9?'hi':''}"></span>`).join('')}</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-label">In Stock</div>
+      <div class="mc-value" style="color:var(--green)">${inStock}</div>
+      <div class="mc-sub mc-up">▲ Healthy levels</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-label">Low / Out of Stock</div>
+      <div class="mc-value" style="color:var(--amber)">${low+out}</div>
+      <div class="mc-sub mc-down">▼ Action needed (${low} low, ${out} out)</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-label">Total Inventory Value</div>
+      <div class="mc-value" style="font-size:18px">${₹(totalVal)}</div>
+      <div class="mc-sub mc-up">▲ +4.2% vs last month</div>
+    </div>
+  </div>
+  <div class="wf-bar">
+    ${[["Receiving",4,"RCV"],["Storage",inv.length,"SKU"],["Picking",7,"Open"],["Packing",3,"Done"],["Shipping",6,"Active"],["Labelling",12,"Today"]].map(([l,c,u],i)=>`
+    <div class="wf-step ${i===0?'active':''}" onclick="showPage('${['receiving','storage','picking','picking','shipping','labelling'][i]}')">
+      <div class="wf-num">STEP ${i+1}</div>
+      <div class="wf-label">${l}</div>
+      <div class="wf-count">${c} ${u}</div>
+    </div>`).join('')}
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Inventory Snapshot</div><div class="card-subtitle">${co.name} · ${inv.length} SKUs</div></div>
+        <button class="btn-tertiary" onclick="showPage('inventory')">View All →</button>
+      </div>
+      <div class="tbl-wrap"><table><thead><tr><th>SKU</th><th>Item</th><th>Qty</th><th>Status</th></tr></thead>
+      <tbody>${inv.slice(0,8).map(r=>`<tr><td class="mono">${r.sku}</td><td>${r.name}</td><td class="mono">${r.qty}</td><td>${tag(r.status)}</td></tr>`).join('')}</tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Pick & Pack Queue</div><div class="card-subtitle">Active orders today</div></div>
+        <button class="btn-tertiary" onclick="showPage('picking')">View All →</button>
+      </div>
+      <div class="tbl-wrap"><table><thead><tr><th>ID</th><th>Item</th><th>Priority</th><th>Status</th></tr></thead>
+      <tbody>${getPickOrders().slice(0,7).map(r=>`<tr><td class="mono">${r.id}</td><td>${r.item}</td><td>${tag(r.priority)}</td><td>${tag(r.status)}</td></tr>`).join('')}</tbody></table></div>
+    </div>
+  </div>
+  <div class="three-col">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Zone Distribution</div></div>
+      ${ZONES.slice(0,5).map(z=>{const items=inv.filter(i=>i.zone===z);const pct=Math.round(items.length/inv.length*100);return`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--on-surface-2);font-weight:500">${z}</span><span style="color:var(--on-surface-3);font-size:11px">${items.length} SKUs</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:linear-gradient(90deg,var(--primary),var(--primary-dark))"></div></div></div>`;}).join('')}
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Recent Shipments</div></div>
+      ${getShipments().slice(0,5).map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--ghost)"><div><div style="font-size:12px;font-weight:500;color:var(--on-surface)">${s.id}</div><div style="font-size:11px;color:var(--on-surface-3);margin-top:1px">${s.carrier} · ${s.dest}</div></div>${tag(s.status)}</div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Purchase Orders</div></div>
+      ${getPOs(currentCo).slice(0,5).map(p=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--ghost)"><div><div style="font-size:12px;font-weight:500;color:var(--on-surface)">${p.id}</div><div style="font-size:11px;color:var(--on-surface-3);margin-top:1px">${p.item.substring(0,18)} · ${p.supplier.split(' ')[0]}</div></div>${tag(p.status)}</div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// =============================================================
+// RECEIVING
+// =============================================================
+function renderReceiving(C,co,inv){
+  const orders=getRecvOrders();
+  C.innerHTML=`
+  <div class="section-title">Receiving</div>
+  <div class="section-desc">Manage inbound shipments and receipt confirmations for ${co.name}</div>
+  <div class="metrics-grid g3">
+    <div class="metric-card"><div class="mc-label">Pending Receipts</div><div class="mc-value">4</div><div class="mc-sub">Awaiting confirmation</div></div>
+    <div class="metric-card"><div class="mc-label">Received Today</div><div class="mc-value mc-up">2</div><div class="mc-sub">▲ On schedule</div></div>
+    <div class="metric-card"><div class="mc-label">Expected This Week</div><div class="mc-value">9</div><div class="mc-sub">From 4 suppliers</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">Inbound Shipments</div><div class="card-subtitle">All open receiving orders</div></div>
+      <div class="card-actions"><button class="btn-ghost">📤 Export</button><button class="btn-primary" onclick="openNewModal()">+ Receive New</button></div>
+    </div>
+    <input class="search-bar" placeholder="Search by item, PO or supplier..." oninput="filterRows(this,'mainTable')">
+    <div class="tbl-wrap"><table id="mainTable"><thead><tr><th>Receipt ID</th><th>PO Ref</th><th>Item</th><th>Qty</th><th>Supplier</th><th>Assigned To</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>${orders.map(r=>`<tr><td class="mono">${r.id}</td><td class="mono">${r.po}</td><td>${r.item}</td><td class="mono">${r.qty}</td><td>${r.supplier}</td><td>${r.assignee}</td><td class="muted">${r.date}</td><td>${tag(r.status)}</td><td><button class="btn-sm success" onclick="showToast('Receipt updated!')">Confirm</button></td></tr>`).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+
+// =============================================================
+// STORAGE
+// =============================================================
+function renderStorage(C,co,inv){
+  C.innerHTML=`
+  <div class="section-title">Storage</div>
+  <div class="section-desc">Warehouse zone management and item location overview for ${co.name}</div>
+  <div class="metrics-grid g4">
+    <div class="metric-card"><div class="mc-label">Total Zones</div><div class="mc-value">${ZONES.length}</div></div>
+    <div class="metric-card"><div class="mc-label">Total SKUs Stored</div><div class="mc-value mc-accent">${inv.length}</div></div>
+    <div class="metric-card"><div class="mc-label">Capacity Used</div><div class="mc-value">74%</div><div class="mc-sub"><div class="progress-bar"><div class="progress-fill" style="width:74%;background:var(--tertiary)"></div></div></div></div>
+    <div class="metric-card"><div class="mc-label">Items In Transit</div><div class="mc-value">${inv.filter(i=>i.status==="In Transit").length}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">Zone Allocation</div><div class="card-subtitle">All ${inv.length} SKUs across storage zones</div></div>
+      <div class="card-actions"><button class="btn-ghost">📤 Export</button></div>
+    </div>
+    <input class="search-bar" placeholder="Search by item, zone or status..." oninput="filterRows(this,'mainTable')">
+    <div class="tbl-wrap"><table id="mainTable"><thead><tr><th>SKU</th><th>Item</th><th>Zone</th><th>Qty</th><th>Min Qty</th><th>Supplier</th><th>Last Moved</th><th>Status</th></tr></thead>
+    <tbody>${inv.map(r=>`<tr><td class="mono">${r.sku}</td><td>${r.name}</td><td><span class="tag tag-gray">${r.zone}</span></td><td class="mono">${r.qty}</td><td class="mono">${r.min_qty}</td><td class="muted">${r.supplier.split(' ')[0]}</td><td class="muted">${r.lastMoved}</td><td>${tag(r.status)}</td></tr>`).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+
+// =============================================================
+// PICK & PACK
+// =============================================================
+function renderPicking(C,co,inv){
+  const orders=getPickOrders();
+  C.innerHTML=`
+  <div class="section-title">Pick & Pack</div>
+  <div class="section-desc">Manage open pick orders and packing tasks for ${co.name}</div>
+  <div class="metrics-grid g4">
+    <div class="metric-card"><div class="mc-label">Open Orders</div><div class="mc-value">${orders.filter(o=>o.status==="Pending").length}</div></div>
+    <div class="metric-card"><div class="mc-label">In Progress</div><div class="mc-value mc-accent">${orders.filter(o=>o.status==="In Progress").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Packed & Ready</div><div class="mc-value mc-up">${orders.filter(o=>o.status==="Packed").length}</div></div>
+    <div class="metric-card"><div class="mc-label">High Priority</div><div class="mc-value" style="color:var(--red)">${orders.filter(o=>o.priority==="High").length}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">Pick Orders</div><div class="card-subtitle">Active picking queue</div></div>
+      <div class="card-actions"><button class="btn-ghost">📤 Export</button><button class="btn-primary" onclick="showToast('New pick order created!')">+ New Pick Order</button></div>
+    </div>
+    <input class="search-bar" placeholder="Search by order, item or zone..." oninput="filterRows(this,'mainTable')">
+    <div class="tbl-wrap"><table id="mainTable"><thead><tr><th>Pick ID</th><th>Order</th><th>Item</th><th>SKU</th><th>Zone</th><th>Qty</th><th>Assigned To</th><th>Priority</th><th>Status</th><th>Date</th></tr></thead>
+    <tbody>${orders.map(r=>`<tr><td class="mono">${r.id}</td><td class="mono">${r.order}</td><td>${r.item}</td><td class="mono">${r.sku}</td><td><span class="tag tag-gray">${r.zone}</span></td><td class="mono">${r.qty}</td><td>${r.assignee}</td><td>${tag(r.priority)}</td><td>${tag(r.status)}</td><td class="muted">${r.date}</td></tr>`).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+
+// =============================================================
+// SHIPPING
+// =============================================================
+function renderShipping(C,co,inv){
+  const ships=getShipments();
+  C.innerHTML=`
+  <div class="section-title">Shipping</div>
+  <div class="section-desc">Track outbound shipments and delivery status for ${co.name}</div>
+  <div class="metrics-grid g4">
+    <div class="metric-card"><div class="mc-label">Total Shipments</div><div class="mc-value">${ships.length}</div></div>
+    <div class="metric-card"><div class="mc-label">Dispatched</div><div class="mc-value mc-accent">${ships.filter(s=>s.status==="Dispatched").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Delivered</div><div class="mc-value mc-up">${ships.filter(s=>s.status==="Delivered").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Scheduled</div><div class="mc-value">${ships.filter(s=>s.status==="Scheduled").length}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">Outbound Shipments</div><div class="card-subtitle">All active delivery records</div></div>
+      <div class="card-actions"><button class="btn-ghost">📤 Export</button><button class="btn-primary" onclick="openNewModal()">+ Create Shipment</button></div>
+    </div>
+    <input class="search-bar" placeholder="Search by order, carrier or destination..." oninput="filterRows(this,'mainTable')">
+    <div class="tbl-wrap"><table id="mainTable"><thead><tr><th>Shipment ID</th><th>Order</th><th>Item</th><th>Qty</th><th>Carrier</th><th>Tracking #</th><th>Destination</th><th>Date</th><th>Status</th></tr></thead>
+    <tbody>${ships.map(r=>`<tr><td class="mono">${r.id}</td><td class="mono">${r.order}</td><td>${r.item}</td><td class="mono">${r.qty}</td><td>${r.carrier}</td><td class="mono" style="font-size:10px">${r.tracking}</td><td>${r.dest}</td><td class="muted">${r.date}</td><td>${tag(r.status)}</td></tr>`).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+
+// =============================================================
+// LABELLING
+// =============================================================
+function renderLabelling(C,co,inv){
+  let sel=inv[0];
+  const opts=inv.map((i,idx)=>`<option value="${idx}">${i.name}</option>`).join('');
+  C.innerHTML=`
+  <div class="section-title">Labelling</div>
+  <div class="section-desc">Generate and print barcode labels for ${co.name} inventory items</div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Select Item</div></div>
+      <div class="form-group" style="margin-bottom:16px">
+        <label>Inventory Item</label>
+        <select onchange="updateLabel(this.value)" id="lblSelect">${opts}</select>
+      </div>
+      <div class="form-group" style="margin-bottom:16px">
+        <label>Number of Labels</label>
+        <input type="number" value="1" min="1" max="100">
+      </div>
+      <div class="form-group">
+        <label>Label Format</label>
+        <select><option>Standard (50×25mm)</option><option>Large (100×50mm)</option><option>Small (38×19mm)</option></select>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <button class="btn-primary" onclick="window.print()">🖨 Print Labels</button>
+        <button class="btn-ghost" onclick="showToast('Labels exported as PDF!')">📄 Export PDF</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Label Preview</div></div>
+      <div class="label-preview" id="labelPreview">
+        <div class="lp-header">
+          <span>${co.short} INVENTORY LABEL</span>
+          <span>${new Date().toLocaleDateString('en-IN')}</span>
+        </div>
+        <div class="lp-item-name" id="lp-name">${sel.name}</div>
+        <div class="lp-barcode"></div>
+        <div class="lp-field"><span class="lp-key">SKU</span><span class="lp-val" id="lp-sku">${sel.sku}</span></div>
+        <div class="lp-field"><span class="lp-key">Zone</span><span class="lp-val" id="lp-zone">${sel.zone}</span></div>
+        <div class="lp-field"><span class="lp-key">Qty</span><span class="lp-val" id="lp-qty">${sel.qty}</span></div>
+        <div class="lp-field"><span class="lp-key">Unit Cost</span><span class="lp-val" id="lp-cost">${₹(sel.cost)}</span></div>
+        <div class="lp-field"><span class="lp-key">Status</span><span class="lp-val" id="lp-status">${sel.status}</span></div>
+        <div class="lp-footer">${co.name} · Aaisun Inventory Suite v3.0 · aaisun.com</div>
+      </div>
+    </div>
+  </div>`;
+  window.updateLabel=function(idx){
+    const item=inv[parseInt(idx)];
+    document.getElementById('lp-name').textContent=item.name;
+    document.getElementById('lp-sku').textContent=item.sku;
+    document.getElementById('lp-zone').textContent=item.zone;
+    document.getElementById('lp-qty').textContent=item.qty;
+    document.getElementById('lp-cost').textContent=₹(item.cost);
+    document.getElementById('lp-status').textContent=item.status;
+  };
+}
+
+// =============================================================
+// PURCHASE ORDERS
+// =============================================================
+function renderPOs(C,co,inv){
+  const pos=getPOs(currentCo);
+  C.innerHTML=`
+  <div class="section-title">Purchase Orders</div>
+  <div class="section-desc">Manage procurement orders for ${co.name}</div>
+  <div class="metrics-grid g4">
+    <div class="metric-card"><div class="mc-label">Total POs</div><div class="mc-value">${pos.length}</div></div>
+    <div class="metric-card"><div class="mc-label">Pending</div><div class="mc-value" style="color:var(--amber)">${pos.filter(p=>p.status==="Pending").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Approved</div><div class="mc-value mc-up">${pos.filter(p=>p.status==="Approved").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Total PO Value</div><div class="mc-value" style="font-size:16px">${₹(pos.reduce((a,b)=>a+b.total,0))}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">All Purchase Orders</div><div class="card-subtitle">${co.industry} · ${co.name}</div></div>
+      <div class="card-actions"><button class="btn-ghost">📤 Export</button><button class="btn-primary" onclick="openNewModal()">+ Raise PO</button></div>
+    </div>
+    <input class="search-bar" placeholder="Search by PO ID, item or supplier..." oninput="filterRows(this,'mainTable')">
+    <div class="tbl-wrap"><table id="mainTable"><thead><tr><th>PO ID</th><th>Supplier</th><th>Item</th><th>Qty</th><th>Unit Cost</th><th>Total</th><th>Date Raised</th><th>Est. Delivery</th><th>Raised By</th><th>Status</th></tr></thead>
+    <tbody>${pos.map(r=>`<tr><td class="mono">${r.id}</td><td>${r.supplier}</td><td>${r.item}</td><td class="mono">${r.qty}</td><td class="mono">${₹(r.unit_cost)}</td><td class="mono" style="font-weight:600">${₹(r.total)}</td><td class="muted">${r.date}</td><td class="muted">${r.delivery}</td><td>${r.raised_by}</td><td>${tag(r.status)}</td></tr>`).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+
+// =============================================================
+// SUPPLIERS
+// =============================================================
+function renderSuppliers(C,co,inv){
+  C.innerHTML=`
+  <div class="section-title">Suppliers</div>
+  <div class="section-desc">Supplier directory and performance overview</div>
+  <div class="metrics-grid g4">
+    <div class="metric-card"><div class="mc-label">Total Suppliers</div><div class="mc-value">${SUPPLIERS.length}</div></div>
+    <div class="metric-card"><div class="mc-label">Active</div><div class="mc-value mc-up">${SUPPLIERS.filter(s=>s.status==="Active").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Avg Rating</div><div class="mc-value mc-accent">${(SUPPLIERS.reduce((a,b)=>a+b.rating,0)/SUPPLIERS.length).toFixed(1)}</div></div>
+    <div class="metric-card"><div class="mc-label">Total Items Supplied</div><div class="mc-value">${SUPPLIERS.reduce((a,b)=>a+b.items,0).toLocaleString()}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">Supplier Directory</div></div>
+      <div class="card-actions"><button class="btn-ghost">📤 Export</button><button class="btn-primary" onclick="showToast('New supplier form opened!')">+ Add Supplier</button></div>
+    </div>
+    <input class="search-bar" placeholder="Search suppliers by name, city or contact..." oninput="filterRows(this,'mainTable')">
+    <div class="tbl-wrap"><table id="mainTable"><thead><tr><th>Supplier ID</th><th>Name</th><th>Contact</th><th>Phone</th><th>Email</th><th>City</th><th>Items</th><th>Rating</th><th>Status</th></tr></thead>
+    <tbody>${SUPPLIERS.map(s=>`<tr><td class="mono">${s.id}</td><td style="font-weight:500">${s.name}</td><td>${s.contact}</td><td class="mono">${s.phone}</td><td class="muted">${s.email}</td><td>${s.city}</td><td class="mono">${s.items}</td><td><span style="color:var(--tertiary);font-weight:600">★ ${s.rating}</span></td><td>${tag(s.status)}</td></tr>`).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+
+// =============================================================
+// RETURNS
+// =============================================================
+function renderReturns(C,co,inv){
+  const rets=getReturns(currentCo);
+  C.innerHTML=`
+  <div class="section-title">Returns</div>
+  <div class="section-desc">Track and process return requests for ${co.name}</div>
+  <div class="metrics-grid g4">
+    <div class="metric-card"><div class="mc-label">Total Returns</div><div class="mc-value">${rets.length}</div></div>
+    <div class="metric-card"><div class="mc-label">Pending</div><div class="mc-value" style="color:var(--amber)">${rets.filter(r=>r.status==="Pending").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Approved</div><div class="mc-value mc-up">${rets.filter(r=>r.status==="Approved"||r.status==="Refunded").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Total Refunds</div><div class="mc-value" style="font-size:16px">${₹(rets.reduce((a,b)=>a+b.refund,0))}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">Return Requests</div></div>
+      <div class="card-actions"><button class="btn-ghost">📤 Export</button><button class="btn-primary" onclick="openNewModal()">+ Log Return</button></div>
+    </div>
+    <div class="tbl-wrap"><table id="mainTable"><thead><tr><th>Return ID</th><th>SKU</th><th>Item</th><th>Qty</th><th>Reason</th><th>Handler</th><th>Carrier</th><th>Refund Value</th><th>Date</th><th>Status</th></tr></thead>
+    <tbody>${rets.map(r=>`<tr><td class="mono">${r.id}</td><td class="mono">${r.sku}</td><td>${r.item}</td><td class="mono">${r.qty}</td><td class="muted">${r.reason}</td><td>${r.handler}</td><td>${r.carrier}</td><td class="mono" style="font-weight:600">${₹(r.refund)}</td><td class="muted">${r.date}</td><td>${tag(r.status)}</td></tr>`).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+
+// =============================================================
+// INVENTORY (full 50 SKU table)
+// =============================================================
+function renderInventory(C,co,inv){
+  const totalVal=inv.reduce((a,b)=>a+b.qty*b.cost,0);
+  C.innerHTML=`
+  <div class="section-title">Inventory</div>
+  <div class="section-desc">Complete product catalogue for ${co.name} — ${inv.length} SKUs across ${ZONES.length} zones</div>
+  <div class="metrics-grid g4">
+    <div class="metric-card"><div class="mc-label">Total SKUs</div><div class="mc-value mc-accent">${inv.length}</div></div>
+    <div class="metric-card"><div class="mc-label">In Stock</div><div class="mc-value mc-up">${inv.filter(i=>i.status==="In Stock").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Low / Out of Stock</div><div class="mc-value mc-down">${inv.filter(i=>i.status==="Low Stock"||i.status==="Out of Stock").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Total Value</div><div class="mc-value" style="font-size:16px">${₹(totalVal)}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">All Products</div><div class="card-subtitle">${co.industry} · ${co.name}</div></div>
+      <div class="card-actions">
+        <button class="btn-ghost">📤 Export</button>
+        <button class="btn-ghost" onclick="showToast('Filter panel coming soon!')">⚙ Filter</button>
+        <button class="btn-primary" onclick="openNewModal()">+ Add Item</button>
+      </div>
+    </div>
+    <input class="search-bar" placeholder="Search by SKU, item name, zone or status..." oninput="filterRows(this,'mainTable')">
+    <div class="tbl-wrap"><table id="mainTable"><thead><tr><th>#</th><th>SKU</th><th>Product Name</th><th>Zone</th><th>Qty</th><th>Min Qty</th><th>Unit Cost</th><th>Total Value</th><th>Supplier</th><th>Last Moved</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>${inv.map((r,i)=>`<tr>
+      <td class="muted">${i+1}</td>
+      <td class="mono">${r.sku}</td>
+      <td style="font-weight:500">${r.name}</td>
+      <td><span class="tag tag-gray">${r.zone}</span></td>
+      <td class="mono">${r.qty}</td>
+      <td class="mono">${r.min_qty}</td>
+      <td class="mono">${₹(r.cost)}</td>
+      <td class="mono" style="font-weight:600">${₹(r.qty*r.cost)}</td>
+      <td class="muted">${r.supplier.split(' ').slice(0,2).join(' ')}</td>
+      <td class="muted">${r.lastMoved}</td>
+      <td>${tag(r.status)}</td>
+      <td><button class="btn-sm" onclick="showToast('Item updated!')">Edit</button></td>
+    </tr>`).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+
+// =============================================================
+// EMPLOYEES
+// =============================================================
+function renderEmployees(C,co,inv){
+  const emps=getEmps(currentCo);
+  C.innerHTML=`
+  <div class="section-title">Employees</div>
+  <div class="section-desc">${co.name} · ${emps.length} warehouse staff</div>
+  <div class="metrics-grid g4">
+    <div class="metric-card"><div class="mc-label">Total Staff</div><div class="mc-value">${emps.length}</div></div>
+    <div class="metric-card"><div class="mc-label">Morning Shift</div><div class="mc-value">${emps.filter(e=>e.shift==="Morning").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Afternoon Shift</div><div class="mc-value">${emps.filter(e=>e.shift==="Afternoon").length}</div></div>
+    <div class="metric-card"><div class="mc-label">Night Shift</div><div class="mc-value">${emps.filter(e=>e.shift==="Night").length}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">Staff Directory</div></div>
+      <div class="card-actions"><button class="btn-ghost">📤 Export</button><button class="btn-primary" onclick="showToast('New employee form opened!')">+ Add Employee</button></div>
+    </div>
+    <div class="emp-grid">${emps.map(e=>`
+      <div class="emp-card">
+        <div class="emp-avatar" style="background:${e.bg};color:${e.fg}">${e.initials}</div>
+        <div>
+          <div class="emp-name">${e.name}</div>
+          <div class="emp-role">${e.role}</div>
+          <div class="emp-id">${e.id} · ${e.shift}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// =============================================================
+// BARCODE SCANNER
+// =============================================================
+function renderBarcode(C,co,inv){
+  C.innerHTML=`
+  <div class="section-title">Barcode Scanner</div>
+  <div class="section-desc">Lookup products instantly by SKU or barcode for ${co.name}</div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header"><div class="card-title">SKU Lookup</div></div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Scan / Enter SKU</label>
+        <input id="barcodeInput" placeholder="e.g. SKU-ASI-100" oninput="lookupBarcode(this.value)" style="font-size:16px;padding:12px">
+      </div>
+      <div id="barcodeResult" style="padding:14px;background:var(--surface-low);border-radius:var(--radius);min-height:60px;font-size:13px;color:var(--on-surface-3)">
+        Enter a SKU above to look up product details instantly.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Quick Reference — All SKUs</div></div>
+      <input class="search-bar" placeholder="Filter SKUs..." oninput="filterRows(this,'barcodeTable')" style="margin-bottom:12px">
+      <div class="tbl-wrap" style="max-height:300px;overflow-y:auto"><table id="barcodeTable"><thead><tr><th>SKU</th><th>Item</th><th>Qty</th><th>Status</th></tr></thead>
+      <tbody>${inv.map(r=>`<tr onclick="document.getElementById('barcodeInput').value='${r.sku}';lookupBarcode('${r.sku}')" style="cursor:pointer"><td class="mono">${r.sku}</td><td>${r.name}</td><td class="mono">${r.qty}</td><td>${tag(r.status)}</td></tr>`).join('')}
+      </tbody></table></div>
+    </div>
+  </div>`;
+  window.lookupBarcode=function(val){
+    const item=inv.find(i=>i.sku.toLowerCase()===val.toLowerCase());
+    const el=document.getElementById('barcodeResult');
+    if(item){
+      el.innerHTML=`<div style="font-weight:600;font-size:15px;color:var(--on-surface);font-family:var(--font-serif);margin-bottom:10px">${item.name}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
+        <div><span style="color:var(--on-surface-3)">SKU: </span><strong>${item.sku}</strong></div>
+        <div><span style="color:var(--on-surface-3)">Zone: </span><strong>${item.zone}</strong></div>
+        <div><span style="color:var(--on-surface-3)">Qty: </span><strong>${item.qty}</strong></div>
+        <div><span style="color:var(--on-surface-3)">Min Qty: </span><strong>${item.min_qty}</strong></div>
+        <div><span style="color:var(--on-surface-3)">Unit Cost: </span><strong>${₹(item.cost)}</strong></div>
+        <div><span style="color:var(--on-surface-3)">Last Moved: </span><strong>${item.lastMoved}</strong></div>
+      </div>
+      <div style="margin-top:10px">${tag(item.status)}</div>`;
+    }else{
+      el.innerHTML=`<div style="color:var(--on-surface-3)">No product found for <strong>${val||'...'}</strong></div>`;
+    }
+  };
+}
+
+// =============================================================
+// REPORTS
+// =============================================================
+function renderReports(C,co,inv){
+  const totalVal=inv.reduce((a,b)=>a+b.qty*b.cost,0);
+  const low=inv.filter(i=>i.status==="Low Stock").length;
+  const out=inv.filter(i=>i.status==="Out of Stock").length;
+  const topItems=inv.slice().sort((a,b)=>b.qty*b.cost - a.qty*a.cost).slice(0,10);
+  const zoneData=ZONES.map(z=>({zone:z,count:inv.filter(i=>i.zone===z).length,val:inv.filter(i=>i.zone===z).reduce((a,b)=>a+b.qty*b.cost,0)}));
+  C.innerHTML=`
+  <div class="section-title">Reports & Analytics</div>
+  <div class="section-desc">Inventory performance overview for ${co.name} · As of ${new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</div>
+  <div class="metrics-grid g4">
+    <div class="metric-card"><div class="mc-label">Portfolio Value</div><div class="mc-value mc-accent" style="font-size:20px">${₹(totalVal)}</div><div class="mc-sub mc-up">▲ +4.2% MoM</div></div>
+    <div class="metric-card"><div class="mc-label">SKU Coverage</div><div class="mc-value">${inv.length}</div><div class="mc-sub">Across ${ZONES.length} zones</div></div>
+    <div class="metric-card"><div class="mc-label">Stock Health</div><div class="mc-value" style="color:var(--amber)">${low+out}</div><div class="mc-sub mc-down">Items need attention</div></div>
+    <div class="metric-card"><div class="mc-label">Avg Item Value</div><div class="mc-value" style="font-size:18px">${₹(Math.round(totalVal/inv.length))}</div><div class="mc-sub">Per SKU</div></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Top 10 Items by Value</div></div>
+      <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Item</th><th>Qty</th><th>Unit Cost</th><th>Total Value</th></tr></thead>
+      <tbody>${topItems.map((r,i)=>`<tr><td class="muted">${i+1}</td><td>${r.name}</td><td class="mono">${r.qty}</td><td class="mono">${₹(r.cost)}</td><td class="mono" style="font-weight:700;color:var(--primary)">${₹(r.qty*r.cost)}</td></tr>`).join('')}
+      </tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Zone Value Breakdown</div></div>
+      ${zoneData.map(z=>{const pct=Math.round(z.val/totalVal*100)||0;return`<div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+          <span style="color:var(--on-surface-2);font-weight:500">${z.zone}</span>
+          <span style="color:var(--on-surface-3)">${z.count} SKUs · ${₹(z.val)}</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:linear-gradient(90deg,var(--primary),var(--secondary))"></div></div>
+      </div>`;}).join('')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div><div class="card-title">Stock Status Distribution</div></div>
+      <button class="btn-ghost" onclick="showToast('Report exported!')">📤 Export Report</button>
+    </div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap">
+      ${["In Stock","Low Stock","Out of Stock","Reserved","In Transit"].map(s=>{
+        const cnt=inv.filter(i=>i.status===s).length;
+        const pct=Math.round(cnt/inv.length*100);
+        return`<div style="min-width:140px">
+          <div style="font-size:12px;color:var(--on-surface-2);font-weight:500;margin-bottom:6px">${s}</div>
+          <div style="font-size:24px;font-weight:700;font-family:var(--font-serif);color:var(--on-surface)">${cnt}</div>
+          <div style="font-size:11px;color:var(--on-surface-3);margin-bottom:4px">${pct}% of total</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:var(--${s==='In Stock'?'green':s==='Low Stock'?'amber':s==='Out of Stock'?'red':s==='Reserved'?'blue':'teal'})"></div></div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+// =============================================================
+// INIT
+// =============================================================
+renderCoList();
+updateTopbar();
+showPage("dashboard");
+</script>
+</body>
+</html>

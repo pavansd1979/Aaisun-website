@@ -1,44 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AAISUN — AI that Powers Intelligent Enterprises</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
+
+<!-- ═══════════════ CSS BLOCK 1 — Original Dark Theme ═══════════════ -->
 <style>
   :root {
-    --sapphire: #0B2A6B;
+    --sapphire: #c7e7f2;
     --gold: #F5A623;
     --midnight: #060E22;
-    --navy: #0D1B3E;
+    --navy: #0B2A6B;
     --cyan: #00D4FF;
-    --slate: #1E293B;
-    --cloud: #F7F9FC;
+    --slate: #1e293b;
+    --cloud: #f1f5f9;
     --gold-light: #FFB84D;
-    --blue-mid: #1444A8;
+    --blue-mid: #60a5fa;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Sora', sans-serif;
-    background: var(--midnight);
-    color: #e2e8f0;
+    font-family: 'Inter', sans-serif;
+    background:  #f1f5f;
+    color:  #f1f5f9;
     overflow-x: hidden;
-  }
-
-  /* ===== CANVAS BG ===== */
-  #hero-canvas {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 0;
   }
 
   /* ===== NAV ===== */
@@ -48,16 +38,16 @@
     z-index: 1000;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    background: rgba(6, 14, 34, 0.85);
-    border-bottom: 1px solid rgba(245, 166, 35, 0.15);
+    background: rgba(6, 14, 34, 0.88);
+    border-bottom: 1px solid rgba(245, 166, 35, 0.12);
     transition: all 0.3s ease;
   }
 
   .nav-inner {
-    max-width: 1280px;
+    max-width: 1120px;
     margin: 0 auto;
     padding: 0 2rem;
-    height: 70px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -66,25 +56,20 @@
   .logo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     text-decoration: none;
   }
 
-  .logo-icon {
-    width: 42px;
-    height: 42px;
-    position: relative;
-  }
+  .logo-icon { width: 36px; height: 36px; border-radius: 8px; overflow: hidden; display: flex; align-items: center; }
+  .logo-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
 
   .logo-text {
-    font-family: 'Exo 2', sans-serif;
+    font-family: 'Noto Serif', serif;
     font-weight: 700;
-    font-size: 1.5rem;
-    letter-spacing: 0.05em;
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+    color: #ffffff;
   }
-
-  .logo-text span:first-child { color: #ffffff; }
-  .logo-text .accent { color: var(--gold); }
 
   .nav-links {
     display: flex;
@@ -96,9 +81,9 @@
   .nav-links a {
     font-size: 0.875rem;
     font-weight: 500;
-    color: #94a3b8;
+    color: rgba(255,255,255,0.75);
     text-decoration: none;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
     transition: color 0.2s;
     position: relative;
   }
@@ -106,10 +91,8 @@
   .nav-links a::after {
     content: '';
     position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
+    bottom: -4px; left: 0;
+    width: 0; height: 2px;
     background: var(--gold);
     transition: width 0.3s ease;
   }
@@ -121,12 +104,12 @@
     background: var(--gold);
     color: var(--midnight);
     border: none;
-    padding: 0.6rem 1.4rem;
+    padding: 0.55rem 1.3rem;
     border-radius: 6px;
-    font-family: 'Sora', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
-    font-size: 0.875rem;
-    letter-spacing: 0.04em;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
     cursor: pointer;
     transition: all 0.25s ease;
     text-decoration: none;
@@ -144,34 +127,29 @@
     min-height: 100vh;
     position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     overflow: hidden;
-    background: radial-gradient(ellipse at 70% 40%, rgba(11, 42, 107, 0.5) 0%, transparent 60%),
-                radial-gradient(ellipse at 20% 80%, rgba(20, 68, 168, 0.3) 0%, transparent 50%),
+    background: radial-gradient(ellipse at 60% 40%, rgba(11,42,107,0.55) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(20,68,168,0.3) 0%, transparent 50%),
                 var(--midnight);
+    text-align: center;
+    padding: 120px 2rem 80px;
   }
 
   .hero-grid {
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(11, 42, 107, 0.15) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(11, 42, 107, 0.15) 1px, transparent 1px);
+      linear-gradient(rgba(11,42,107,0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11,42,107,0.15) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
   }
 
-  .hero-inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 8rem 2rem 4rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-    position: relative;
-    z-index: 1;
-  }
+  .hero-content { position: relative; z-index: 2; max-width: 820px; margin: 0 auto; }
 
   .hero-badge {
     display: inline-flex;
@@ -180,19 +158,18 @@
     background: rgba(245, 166, 35, 0.1);
     border: 1px solid rgba(245, 166, 35, 0.3);
     border-radius: 50px;
-    padding: 0.4rem 1rem;
+    padding: 0.4rem 1.1rem;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     color: var(--gold);
     text-transform: uppercase;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
     animation: fadeSlideUp 0.8s ease both;
   }
 
   .badge-dot {
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     background: var(--gold);
     border-radius: 50%;
     animation: pulse 2s infinite;
@@ -204,18 +181,18 @@
   }
 
   .hero-headline {
-    font-family: 'Exo 2', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    font-family: 'Noto Serif', serif;
+    font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
     margin-bottom: 1.5rem;
     animation: fadeSlideUp 0.8s ease 0.1s both;
+    color: #ffffff;
   }
 
   .hero-headline .line-gold { color: var(--gold); }
-  .hero-headline .line-white { color: #ffffff; }
-  .hero-headline .line-blue { 
+  .hero-headline .line-blue {
     background: linear-gradient(90deg, #60a5fa, #93c5fd);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -224,10 +201,12 @@
 
   .hero-sub {
     font-size: 1.1rem;
-    color: #94a3b8;
-    line-height: 1.7;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.75;
     margin-bottom: 2.5rem;
-    max-width: 520px;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
     animation: fadeSlideUp 0.8s ease 0.2s both;
     font-weight: 300;
   }
@@ -235,8 +214,10 @@
   .hero-ctas {
     display: flex;
     gap: 1rem;
+    justify-content: center;
     flex-wrap: wrap;
     animation: fadeSlideUp 0.8s ease 0.3s both;
+    margin-bottom: 3.5rem;
   }
 
   .btn-primary {
@@ -257,7 +238,7 @@
   .btn-primary:hover {
     background: var(--gold-light);
     transform: translateY(-2px);
-    box-shadow: 0 12px 35px rgba(245, 166, 35, 0.4);
+    box-shadow: 0 12px 35px rgba(245,166,35,0.4);
   }
 
   .btn-outline {
@@ -277,49 +258,147 @@
 
   .btn-outline:hover {
     border-color: rgba(255,255,255,0.6);
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.07);
   }
 
-  .hero-stats {
+  /* Hero image */
+  .hero-image-wrap {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    animation: fadeSlideUp 1s ease 0.4s both;
+  }
+
+  .hero-image-wrap img {
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,166,35,0.12);
+    display: block;
+  }
+
+  /* Horizontal badge row — sits flush below the image */
+  .floating-badges {
     display: flex;
-    gap: 2rem;
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    animation: fadeSlideUp 0.8s ease 0.4s both;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
   }
 
-  .stat-item { text-align: left; }
-  .stat-num {
-    font-family: 'Exo 2', sans-serif;
+  .floating-alert {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    border-radius: 10px;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.75rem;
+    color: #22c55e;
+    font-weight: 600;
+    backdrop-filter: blur(12px);
+    animation: float 3s ease-in-out infinite;
+    white-space: nowrap;
+  }
+
+  .floating-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(11, 42, 107, 0.9);
+    border: 1px solid rgba(100, 149, 237, 0.3);
+    border-radius: 8px;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.72rem;
+    color: #93c5fd;
+    font-weight: 600;
+    backdrop-filter: blur(12px);
+    animation: float 3s ease-in-out 1.5s infinite;
+    white-space: nowrap;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== HERO STATS STRIP ===== */
+  .hero-stats-strip {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-top: 4rem;
+    animation: fadeSlideUp 0.8s ease 0.5s both;
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding-top: 2.5rem;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .hstat {
+    padding: 1.2rem 2.5rem;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    flex: 1;
+  }
+
+  .hstat:last-child { border-right: none; }
+
+  .hstat-num {
+    font-family: 'Noto Serif', serif;
     font-size: 2rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--gold);
     line-height: 1;
   }
 
-  .stat-label {
-    font-size: 0.75rem;
-    color: #64748b;
-    margin-top: 0.25rem;
-    letter-spacing: 0.04em;
+  .hstat-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.45);
+    margin-top: 0.3rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     font-weight: 500;
   }
 
-  /* ===== HERO VISUAL ===== */
-  .hero-visual {
-    position: relative;
-    animation: fadeSlideUp 1s ease 0.5s both;
+  /* ===== AI DASHBOARD CARD ===== */
+  .dashboard-section {
+    background: var(--midnight);
+    padding: 5rem 2rem;
+  }
+
+  .dashboard-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .dashboard-label {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 1.25rem;
   }
 
   .dashboard-card {
-    background: rgba(13, 27, 62, 0.8);
-    border: 1px solid rgba(245, 166, 35, 0.2);
-    border-radius: 16px;
-    padding: 1.5rem;
+    background: rgba(13, 27, 62, 0.85);
+    border: 1px solid rgba(245, 166, 35, 0.18);
+    border-radius: 18px;
+    padding: 2rem;
     backdrop-filter: blur(10px);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
   }
 
   .card-header {
@@ -369,9 +448,9 @@
   }
 
   .metric-val {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Inter', monospace;
     font-size: 1.4rem;
-    font-weight: 500;
+    font-weight: 600;
     color: #fff;
   }
 
@@ -414,101 +493,23 @@
 
   .bar.active { background: linear-gradient(180deg, var(--gold) 0%, rgba(245,166,35,0.5) 100%); }
 
-  .floating-alert {
-    position: absolute;
-    top: -1.5rem;
-    right: -1.5rem;
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.3);
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    font-size: 0.75rem;
-    color: #22c55e;
-    font-weight: 600;
-    backdrop-filter: blur(10px);
-    animation: float 3s ease-in-out infinite;
-    white-space: nowrap;
-  }
-
-  .floating-tag {
-    position: absolute;
-    bottom: -1rem;
-    left: -1.5rem;
-    background: rgba(11, 42, 107, 0.9);
-    border: 1px solid rgba(100, 149, 237, 0.3);
-    border-radius: 8px;
-    padding: 0.6rem 1rem;
-    font-size: 0.7rem;
-    color: #93c5fd;
-    font-weight: 600;
-    backdrop-filter: blur(10px);
-    animation: float 3s ease-in-out 1.5s infinite;
-    white-space: nowrap;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-  }
-
-  @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ===== SECTIONS ===== */
-  section { position: relative; }
-
-  .section-inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 6rem 2rem;
-  }
-
-  .section-label {
-    display: inline-block;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    margin-bottom: 1rem;
-  }
-
-  .section-title {
-    font-family: 'Exo 2', sans-serif;
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 800;
-    color: #ffffff;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    margin-bottom: 1rem;
-  }
-
-  .section-sub {
-    font-size: 1.05rem;
-    color: #64748b;
-    max-width: 600px;
-    line-height: 1.7;
-    font-weight: 300;
-  }
-
-  /* ===== LOGOS / TRUST ===== */
+  /* ===== TRUST BAR ===== */
   .trust-bar {
-    background: rgba(13, 27, 62, 0.4);
-    border-top: 1px solid rgba(255,255,255,0.05);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    padding: 2.5rem 0;
+    background: rgba(6, 14, 34, 0.97);
+    border-top: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    padding: 2rem 0;
   }
 
   .trust-inner {
-    max-width: 1280px;
+    max-width: 1120px;
     margin: 0 auto;
     padding: 0 2rem;
     display: flex;
     align-items: center;
-    gap: 4rem;
-    overflow: hidden;
+    gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .trust-label {
@@ -524,39 +525,72 @@
   .logos-row {
     display: flex;
     align-items: center;
-    gap: 3rem;
-    flex: 1;
-    overflow: hidden;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .logo-pill {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.07);
     border-radius: 8px;
-    padding: 0.6rem 1.4rem;
-    font-size: 0.8rem;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.78rem;
     font-weight: 700;
     color: #475569;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
     transition: all 0.3s;
+    cursor: default;
   }
 
-  .logo-pill:hover {
-    border-color: rgba(245, 166, 35, 0.3);
-    color: #94a3b8;
+  .logo-pill:hover { border-color: rgba(245,166,35,0.3); color: #94a3b8; }
+
+  /* ===== SECTIONS ===== */
+  section { position: relative; }
+
+  .section-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+
+  .section-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif', serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    font-size: 1.05rem;
+    color: #64748b;
+    max-width: 580px;
+    line-height: 1.75;
+    font-weight: 300;
   }
 
   /* ===== INDUSTRIES ===== */
-  .industries-bg {
-    background: rgba(6, 14, 34, 0.9);
-  }
+  .industries-bg { background: rgba(6, 14, 34, 0.96); }
 
   .industries-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
     margin-top: 3rem;
   }
 
@@ -582,46 +616,30 @@
     transform-origin: left;
   }
 
-  .industry-card:hover { 
-    border-color: rgba(245, 166, 35, 0.25);
-    background: rgba(13, 27, 62, 0.8);
+  .industry-card:hover {
+    border-color: rgba(245,166,35,0.25);
+    background: rgba(13,27,62,0.8);
     transform: translateY(-4px);
     box-shadow: 0 20px 50px rgba(0,0,0,0.4);
   }
 
   .industry-card:hover::before { transform: scaleX(1); }
 
-  .industry-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    display: block;
-  }
-
-  .industry-name {
-    font-family: 'Exo 2', sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #fff;
-    margin-bottom: 0.5rem;
-  }
-
-  .industry-desc {
-    font-size: 0.85rem;
-    color: #475569;
-    line-height: 1.6;
-  }
+  .industry-icon { font-size: 2.2rem; margin-bottom: 1rem; display: block; }
+  .industry-name { font-family: 'Noto Serif', serif; font-weight: 700; font-size: 1.05rem; color: #fff; margin-bottom: 0.4rem; }
+  .industry-desc { font-size: 0.82rem; color: #475569; line-height: 1.6; }
 
   /* ===== SOLUTIONS ===== */
   .solutions-bg {
-    background: radial-gradient(ellipse at 50% 0%, rgba(11, 42, 107, 0.2) 0%, transparent 60%), var(--midnight);
+    background: radial-gradient(ellipse at 50% 0%, rgba(11,42,107,0.2) 0%, transparent 60%), var(--midnight);
   }
 
   .solutions-tabs {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 3rem;
+    gap: 0;
+    margin-top: 3rem;
+    margin-bottom: 2.5rem;
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    padding-bottom: 0;
   }
 
   .tab-btn {
@@ -629,7 +647,7 @@
     background: none;
     border: none;
     color: #475569;
-    font-family: 'Sora', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
@@ -655,29 +673,30 @@
 
   .solutions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.4rem;
   }
+
+  .tab-content.hidden { display: none; }
 
   .solution-card {
     background: rgba(13, 27, 62, 0.4);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 14px;
-    padding: 2rem;
+    padding: 1.75rem;
     transition: all 0.35s ease;
     position: relative;
     overflow: hidden;
   }
 
   .solution-card:hover {
-    border-color: rgba(0, 212, 255, 0.2);
-    box-shadow: 0 0 40px rgba(0, 212, 255, 0.05);
+    border-color: rgba(0,212,255,0.2);
+    box-shadow: 0 0 40px rgba(0,212,255,0.05);
     transform: translateY(-3px);
   }
 
   .sol-icon-wrap {
-    width: 48px;
-    height: 48px;
+    width: 48px; height: 48px;
     background: linear-gradient(135deg, rgba(245,166,35,0.15), rgba(0,212,255,0.1));
     border-radius: 12px;
     display: flex;
@@ -688,501 +707,355 @@
     border: 1px solid rgba(245,166,35,0.15);
   }
 
-  .sol-title {
-    font-weight: 700;
-    font-size: 1rem;
-    color: #fff;
-    margin-bottom: 0.5rem;
-  }
-
-  .sol-desc {
-    font-size: 0.85rem;
-    color: #475569;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  .sol-link {
-    font-size: 0.8rem;
-    color: var(--gold);
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    transition: gap 0.2s;
-  }
-
+  .sol-title { font-weight: 700; font-size: 1rem; color: #fff; margin-bottom: 0.5rem; }
+  .sol-desc { font-size: 0.84rem; color: #475569; line-height: 1.65; margin-bottom: 1rem; }
+  .sol-link { font-size: 0.8rem; color: var(--gold); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem; transition: gap 0.2s; }
   .sol-link:hover { gap: 0.6rem; }
-
-  /* ===== METRICS / WHY AAISUN ===== */
-  .why-section {
-    background: linear-gradient(135deg, rgba(11, 42, 107, 0.3) 0%, rgba(6, 14, 34, 0.9) 100%);
-    border-top: 1px solid rgba(255,255,255,0.05);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .why-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: center;
-  }
-
-  .why-features {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .why-feature {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    padding: 1.25rem;
-    border-radius: 12px;
-    transition: background 0.25s;
-  }
-
-  .why-feature:hover {
-    background: rgba(255,255,255,0.03);
-  }
-
-  .feature-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-    background: rgba(245,166,35,0.1);
-    border: 1px solid rgba(245,166,35,0.2);
-  }
-
-  .feature-title {
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.3rem;
-    font-size: 0.95rem;
-  }
-
-  .feature-desc {
-    font-size: 0.85rem;
-    color: #475569;
-    line-height: 1.6;
-  }
-
-  .metrics-showcase {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  .metric-card {
-    background: rgba(13, 27, 62, 0.6);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 14px;
-    padding: 1.75rem;
-    text-align: center;
-    transition: all 0.3s;
-  }
-
-  .metric-card:hover {
-    border-color: rgba(245,166,35,0.2);
-    transform: scale(1.02);
-  }
-
-  .metric-card.span2 { grid-column: span 2; }
-
-  .metric-card-val {
-    font-family: 'Exo 2', sans-serif;
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--gold);
-    line-height: 1;
-    margin-bottom: 0.5rem;
-  }
-
-  .metric-card-label {
-    font-size: 0.8rem;
-    color: #475569;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  /* ===== TESTIMONIALS ===== */
-  .testimonials-bg { background: rgba(6, 14, 34, 0.95); }
-
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-top: 3rem;
-  }
-
-  .testimonial-card {
-    background: rgba(13, 27, 62, 0.5);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 16px;
-    padding: 2rem;
-    transition: all 0.35s;
-  }
-
-  .testimonial-card:hover {
-    border-color: rgba(245, 166, 35, 0.2);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-  }
-
-  .stars {
-    color: var(--gold);
-    font-size: 0.9rem;
-    letter-spacing: 0.1em;
-    margin-bottom: 1rem;
-  }
-
-  .testimonial-text {
-    font-size: 0.92rem;
-    color: #94a3b8;
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-    font-style: italic;
-  }
-
-  .testimonial-author {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .author-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--sapphire), var(--gold));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.85rem;
-    color: white;
-  }
-
-  .author-name {
-    font-weight: 700;
-    font-size: 0.875rem;
-    color: #fff;
-  }
-
-  .author-role {
-    font-size: 0.75rem;
-    color: #475569;
-    margin-top: 0.1rem;
-  }
-
-  /* ===== CTA SECTION ===== */
-  .cta-section {
-    background: linear-gradient(135deg, rgba(11, 42, 107, 0.6) 0%, rgba(20, 68, 168, 0.4) 50%, rgba(6, 14, 34, 0.9) 100%);
-    border-top: 1px solid rgba(245,166,35,0.1);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cta-section::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .cta-inner {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 7rem 2rem;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-  }
-
-  .cta-title {
-    font-family: 'Exo 2', sans-serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 800;
-    color: #fff;
-    line-height: 1.1;
-    margin-bottom: 1rem;
-    letter-spacing: -0.02em;
-  }
-
-  .cta-sub {
-    font-size: 1.05rem;
-    color: #64748b;
-    margin-bottom: 2.5rem;
-    line-height: 1.7;
-  }
-
-  .cta-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  /* ===== FOOTER ===== */
-  footer {
-    background: rgba(3, 7, 18, 0.98);
-    border-top: 1px solid rgba(255,255,255,0.05);
-    padding: 4rem 0 2rem;
-  }
-
-  .footer-inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-
-  .footer-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 3rem;
-    margin-bottom: 3rem;
-  }
-
-  .footer-brand-desc {
-    font-size: 0.875rem;
-    color: #334155;
-    line-height: 1.7;
-    margin-top: 1rem;
-    max-width: 280px;
-  }
-
-  .footer-col-title {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #475569;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 1.25rem;
-  }
-
-  .footer-links {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-
-  .footer-links a {
-    font-size: 0.875rem;
-    color: #334155;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .footer-links a:hover { color: #94a3b8; }
-
-  .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.04);
-    padding-top: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .footer-copy {
-    font-size: 0.8rem;
-    color: #1e293b;
-  }
-
-  .footer-legal {
-    display: flex;
-    gap: 1.5rem;
-  }
-
-  .footer-legal a {
-    font-size: 0.8rem;
-    color: #1e293b;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .footer-legal a:hover { color: #475569; }
 
   /* ===== SCROLLBAR ===== */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--midnight); }
   ::-webkit-scrollbar-thumb { background: rgba(245,166,35,0.3); border-radius: 3px; }
 
-  /* ===== MOBILE ===== */
-  @media (max-width: 900px) {
-    .hero-inner { grid-template-columns: 1fr; }
-    .hero-visual { display: none; }
-    .why-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .nav-links { display: none; }
-    .trust-inner { flex-direction: column; gap: 1.5rem; }
+  /* ===== SCROLL REVEAL ===== */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+
+<!-- ═══════════════ CSS BLOCK 2 — Azure Curator Light Theme ═══════════════ -->
+<style>
+  :root {
+    --primary: #1F7DB7;
+    --primary-dark: #1564A0;
+    --primary-light: #D6EAF6;
+    --secondary: #5F7A92;
+    --tertiary: #A26200;
+    --tertiary-light: #F5E8D0;
+    --neutral: #74777C;
+    --bg: #EDF2F6;
+    --surface: #FFFFFF;
+    --surface-low: #F0F5F9;
+    --surface-container: #E3EBF2;
+    --surface-high: #D6E2EC;
+    --on-surface: #2C3E50;
+    --on-surface-2: #4A6275;
+    --on-surface-3: #7A95A8;
+    --on-surface-4: #A8BEC9;
+    --ghost: rgba(116,119,124,0.15);
+    --green: #0A6B3E; --green-light: #D4F0E3;
+    --amber: #A26200; --amber-light: #F5E8D0;
+    --red: #B02A2A; --red-light: #F5DADA;
+    --blue: #1F7DB7; --blue-light: #D6EAF6;
+    --purple: #5A3EA0; --purple-light: #E8E2F8;
+    --font: 'Inter', sans-serif;
+    --font-serif: 'Noto Serif', serif;
+    --radius: 8px; --radius-lg: 12px; --radius-xl: 18px;
+    --shadow: 0 2px 8px rgba(31,125,183,0.07), 0 8px 24px rgba(31,125,183,0.05);
+    --shadow-lg: 0 8px 32px rgba(31,125,183,0.12), 0 2px 8px rgba(31,125,183,0.08);
+    --shadow-float: 0 16px 48px rgba(31,125,183,0.14), 0 4px 12px rgba(31,125,183,0.08);
   }
 
-  /* Animate on scroll */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+  /* Cards pull-up */
+  .cards-pullup {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 10;
   }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
+
+  .feature-card {
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    padding: 26px;
+    box-shadow: var(--shadow-float);
+    transition: all 0.2s;
+    cursor: default;
+    border-top: 3px solid transparent;
+  }
+
+  .feature-card:hover { transform: translateY(-4px); box-shadow: 0 20px 56px rgba(31,125,183,0.16); }
+  .feature-card.ins { border-top-color: var(--blue); }
+  .feature-card.auto { border-top-color: var(--amber); }
+  .feature-card.med { border-top-color: var(--purple); }
+
+  .fc-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .fc-icon.ins { background: var(--blue-light); }
+  .fc-icon.auto { background: var(--amber-light); }
+  .fc-icon.med { background: var(--purple-light); }
+
+  .fc-title { font-family: var(--font-serif); font-size: 18px; font-weight: 700; color: var(--on-surface); margin-bottom: 6px; }
+  .fc-desc { font-size: 13px; color: var(--on-surface-3); line-height: 1.65; margin-bottom: 16px; }
+  .fc-companies { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .fc-co { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--on-surface-2); padding: 5px 0; }
+  .fc-co-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .fc-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: var(--primary);
+    text-decoration: none;
+    padding: 7px 14px; border-radius: var(--radius);
+    background: var(--primary-light);
+    transition: all 0.12s;
+  }
+
+  .fc-link:hover { background: var(--primary); color: #fff; }
+
+  /* Section titles */
+  .section-heading {
+    font-family: var(--font-serif);
+    font-size: 28px; font-weight: 700;
+    color: var(--on-surface);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .section-subheading { font-size: 14px; color: var(--on-surface-3); margin-bottom: 28px; line-height: 1.6; }
+
+  /* Light section wrapper */
+  .light-section {
+    background: var(--bg);
+    padding: 5rem 0;
+  }
+
+  .light-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* App cards grid */
+  .apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+
+  .app-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    box-shadow: var(--shadow);
+    display: flex; gap: 18px; align-items: flex-start;
+    transition: all 0.18s;
+  }
+
+  .app-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+  .app-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+
+  .app-info { flex: 1; min-width: 0; }
+  .app-title { font-family: var(--font-serif); font-size: 15px; font-weight: 700; color: var(--on-surface); margin-bottom: 4px; }
+  .app-desc { font-size: 12px; color: var(--on-surface-3); line-height: 1.6; margin-bottom: 12px; }
+  .app-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  .app-tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.03em; }
+
+  .app-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; color: var(--primary);
+    text-decoration: none; margin-left: auto;
+    padding: 5px 12px; border-radius: var(--radius);
+    background: var(--primary-light); transition: all 0.12s; white-space: nowrap;
+  }
+
+  .app-link:hover { background: var(--primary); color: #fff; }
+  .app-link.disabled { color: var(--on-surface-4); background: var(--surface-container); cursor: not-allowed; pointer-events: none; }
+
+  /* Quick stats row */
+  .quickstats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+    margin-bottom: 3rem;
+  }
+
+  .qs-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+  }
+
+  .qs-icon { font-size: 20px; margin-bottom: 10px; }
+  .qs-value { font-size: 30px; font-weight: 700; font-family: var(--font-serif); color: var(--on-surface); letter-spacing: -0.02em; line-height: 1; }
+  .qs-label { font-size: 11px; color: var(--on-surface-3); margin-top: 6px; font-weight: 500; }
+  .qs-badge { display: inline-block; margin-top: 8px; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+
+  /* Industries detail */
+  .ind-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .ind-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+
+  .ind-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .ind-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .ind-title { font-family: var(--font-serif); font-size: 16px; font-weight: 700; color: var(--on-surface); }
+  .ind-subtitle { font-size: 11px; color: var(--on-surface-3); margin-top: 1px; }
+  .ind-products { margin-bottom: 16px; }
+  .ind-products-label { font-size: 10px; color: var(--on-surface-4); text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; margin-bottom: 8px; }
+  .product-pill { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 10px; background: var(--surface-low); color: var(--on-surface-2); margin: 2px; font-weight: 500; }
+  .ind-companies { margin-top: 14px; }
+  .ind-companies-label { font-size: 10px; color: var(--on-surface-4); text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; margin-bottom: 8px; }
+  .co-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 12px; color: var(--on-surface-2); }
+  .co-row-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .co-badge { font-size: 10px; padding: 1px 6px; border-radius: 6px; margin-left: auto; font-weight: 600; font-family: monospace; }
+
+  /* Light Footer */
+  .footer-light {
+    background: var(--surface);
+    border-top: 1px solid var(--ghost);
+    padding: 40px 2rem;
+  }
+
+  .footer-light-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-brand { font-family: var(--font-serif); font-size: 15px; font-weight: 700; color: var(--on-surface); }
+  .footer-sub { font-size: 12px; color: var(--on-surface-3); margin-top: 3px; }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-link { font-size: 12px; color: var(--on-surface-3); text-decoration: none; transition: color 0.12s; }
+  .footer-link:hover { color: var(--primary); }
+
+  /* Tag colors */
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-amber { background: var(--amber-light); color: var(--amber); }
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+  .tag-gray { background: var(--surface-container); color: var(--on-surface-2); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .cards-pullup { grid-template-columns: 1fr; }
+    .ind-grid { grid-template-columns: 1fr; }
+    .quickstats { grid-template-columns: 1fr 1fr; }
+    .hstat { padding: 1rem 1.2rem; }
+    .hstat-num { font-size: 1.5rem; }
+    nav .nav-links { display: none; }
+    .hero-stats-strip { flex-wrap: wrap; }
+    .hero-image-wrap { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-headline { font-size: 2rem; }
+    .quickstats { grid-template-columns: 1fr; }
+    .hero-stats-strip { display: none; }
   }
 </style>
 </head>
 <body>
 
-<!-- ===== NAV ===== -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  NAV — fixed, frosted glass, minimal Apple-style nav   -->
+<!-- ═══════════════════════════════════════════════════════ -->
 <nav>
   <div class="nav-inner">
-    <a href="#" class="logo">
-      <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
-        <rect width="42" height="42" rx="10" fill="rgba(11,42,107,0.5)"/>
-        <path d="M21 8L32 28H10L21 8Z" fill="none" stroke="#F5A623" stroke-width="2" stroke-linejoin="round"/>
-        <circle cx="21" cy="21" r="4" fill="#F5A623" opacity="0.8"/>
-        <path d="M21 8V34" stroke="#F5A623" stroke-width="1" stroke-dasharray="2 3" opacity="0.4"/>
-        <path d="M10 28H32" stroke="#00D4FF" stroke-width="1" opacity="0.4"/>
-      </svg>
-      <span class="logo-text">AA<span class="accent">ISUN</span></span>
+    <a href="index.html" class="logo">
+      <div class="logo-icon">
+        <img src="Aaisun.jpg" alt="Aaisun Logo">
+      </div>
+      <span class="logo-text">Aaisun</span>
     </a>
 
     <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
       <li><a href="#solutions">Solutions</a></li>
       <li><a href="#industries">Industries</a></li>
-      <li><a href="#why">Why AAISUN</a></li>
-      <li><a href="#insights">Insights</a></li>
-      <li><a href="#about">About</a></li>
+      <li><a href="#apps">Applications</a></li>
+      <li><a href="inventory.html">Inventory</a></li>
     </ul>
 
-    <a href="#demo" class="btn-demo">Book a Demo</a>
+    <a href="#apps" class="btn-demo">Get Started</a>
   </div>
 </nav>
 
-<!-- ===== HERO ===== -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  HERO — full-bleed dark, centered, Apple-style         -->
+<!-- ═══════════════════════════════════════════════════════ -->
 <section class="hero">
   <div class="hero-grid"></div>
-  <div class="hero-inner">
-    <div class="hero-content">
-      <div class="hero-badge">
-        <div class="badge-dot"></div>
-        Enterprise AI Platform · 2025
-      </div>
-      <h1 class="hero-headline">
-        <span class="line-gold">Intelligent AI.</span><br/>
-        <span class="line-white">Unstoppable</span><br/>
-        <span class="line-blue">Operations.</span>
-      </h1>
-      <p class="hero-sub">
-        AAISUN delivers enterprise-grade AI solutions purpose-built for
-        <strong style="color:#94a3b8">Supply Chain</strong> and <strong style="color:#94a3b8">Insurance</strong> —
-        turning complex operational data into decisive, measurable action at scale.
-      </p>
-      <div class="hero-ctas">
-        <a href="#demo" class="btn-primary">
-          Book a Demo
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <a href="#solutions" class="btn-outline">
-          Explore Solutions
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
 
-      <div class="hero-stats">
-        <div class="stat-item">
-          <div class="stat-num">40%</div>
-          <div class="stat-label">Cost Reduction</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">3×</div>
-          <div class="stat-label">Faster Claims</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">200%</div>
-          <div class="stat-label">Avg. ROI</div>
-        </div>
-      </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Aaisun Intelligent AI &nbsp;·&nbsp; Live
     </div>
 
-    <!-- Dashboard Visual -->
-    <div class="hero-visual">
-      <div class="floating-alert">✅ Anomaly Detected & Resolved</div>
-      <div class="dashboard-card">
-        <div class="card-header">
-          <span class="card-title">AI Operations Dashboard</span>
-          <span class="status-live"><span class="status-dot"></span> Live</span>
-        </div>
+    <h1 class="hero-headline">
+      AI that Powers<br>
+      <span class="line-gold">Intelligent</span> Enterprises
+    </h1>
 
-        <div class="metrics-grid">
-          <div class="metric-box">
-            <div class="metric-val gold">98.4%</div>
-            <div class="metric-name">Forecast Acc.</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-val cyan">₹2.3Cr</div>
-            <div class="metric-name">Savings Today</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-val green">+34%</div>
-            <div class="metric-name">Throughput</div>
-          </div>
-        </div>
+    <p class="hero-sub">
+      End-to-end supply chain intelligence, claims automation, and demand forecasting — purpose-built for Insurance, Automotive, and Media industries.
+    </p>
 
-        <div style="margin-bottom:0.5rem;">
-          <span style="font-size:0.7rem;color:#334155;text-transform:uppercase;letter-spacing:0.08em;">Weekly Demand Forecast vs Actual</span>
-        </div>
-        <div class="mini-chart" id="chart">
-          <div class="bar" style="height:45%"></div>
-          <div class="bar" style="height:62%"></div>
-          <div class="bar" style="height:50%"></div>
-          <div class="bar active" style="height:78%"></div>
-          <div class="bar" style="height:55%"></div>
-          <div class="bar active" style="height:90%"></div>
-          <div class="bar" style="height:67%"></div>
-          <div class="bar active" style="height:82%"></div>
-          <div class="bar" style="height:71%"></div>
-          <div class="bar" style="height:58%"></div>
-          <div class="bar active" style="height:95%"></div>
-          <div class="bar" style="height:63%"></div>
-        </div>
+    <div class="hero-ctas">
+      <a href="inventory.html" class="btn-primary">Open Inventory Suite →</a>
+      <a href="#solutions" class="btn-outline">Explore Solutions</a>
+    </div>
 
-        <div style="display:flex;gap:0.75rem;margin-top:1rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:1rem;">
-          <div style="flex:1;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.1);border-radius:8px;padding:0.75rem;text-align:center;">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:1rem;color:#00D4FF;font-weight:500;">247</div>
-            <div style="font-size:0.6rem;color:#334155;text-transform:uppercase;margin-top:0.2rem;letter-spacing:0.08em;">Active SKUs</div>
-          </div>
-          <div style="flex:1;background:rgba(245,166,35,0.05);border:1px solid rgba(245,166,35,0.1);border-radius:8px;padding:0.75rem;text-align:center;">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:1rem;color:#F5A623;font-weight:500;">12ms</div>
-            <div style="font-size:0.6rem;color:#334155;text-transform:uppercase;margin-top:0.2rem;letter-spacing:0.08em;">Latency</div>
-          </div>
-          <div style="flex:1;background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.1);border-radius:8px;padding:0.75rem;text-align:center;">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:1rem;color:#22c55e;font-weight:500;">99.9%</div>
-            <div style="font-size:0.6rem;color:#334155;text-transform:uppercase;margin-top:0.2rem;letter-spacing:0.08em;">Uptime</div>
-          </div>
-        </div>
+    <!-- Research Cells hero image with horizontal badge row -->
+    <div class="hero-image-wrap">
+      <img src="Research.JPG" >
+      <div class="floating-badges">
+        <div class="floating-alert">✅ Anomaly Detected &amp; Resolved</div>
+        <div class="floating-tag">🔗 Integrated with SAP · Blue Yonder · Salesforce</div>
       </div>
-      <div class="floating-tag">🔗 Integrated with SAP · Blue Yonder · Salesforce</div>
+    </div>
+  </div>
+
+  <!-- Stats strip -->
+  <div class="hero-stats-strip">
+    <div class="hstat">
+      <div class="hstat-num">40%</div>
+      <div class="hstat-label">Cost Reduction</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-num">3×</div>
+      <div class="hstat-label">Faster Claims</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-num">200%</div>
+      <div class="hstat-label">Avg. ROI</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-num">3</div>
+      <div class="hstat-label">Industries</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-num">12</div>
+      <div class="hstat-label">Companies</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-num">600</div>
+      <div class="hstat-label">Employees</div>
     </div>
   </div>
 </section>
 
-<!-- ===== TRUST BAR ===== -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  TRUST BAR                                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
 <div class="trust-bar">
   <div class="trust-inner">
     <span class="trust-label">Trusted by leaders in</span>
@@ -1198,19 +1071,245 @@
   </div>
 </div>
 
-<!-- ===== INDUSTRIES ===== -->
-<section id="industries" class="industries-bg">
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  AI DASHBOARD VISUAL                                   -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="dashboard-section">
+  <div class="dashboard-inner">
+    <div class="dashboard-label">Live AI Operations Dashboard</div>
+    <div class="dashboard-card">
+      <div class="card-header">
+        <span class="card-title">AI Operations Dashboard</span>
+        <span class="status-live"><span class="status-dot"></span> Live</span>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <div class="metric-val gold">98.4%</div>
+          <div class="metric-name">Forecast Acc.</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val cyan">₹2.3Cr</div>
+          <div class="metric-name">Savings Today</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val green">+34%</div>
+          <div class="metric-name">Throughput</div>
+        </div>
+      </div>
+      <div style="margin-bottom:0.5rem;">
+        <span style="font-size:0.7rem;color:#334155;text-transform:uppercase;letter-spacing:0.08em;">Weekly Demand Forecast vs Actual</span>
+      </div>
+      <div class="mini-chart">
+        <div class="bar" style="height:45%"></div>
+        <div class="bar" style="height:62%"></div>
+        <div class="bar" style="height:50%"></div>
+        <div class="bar active" style="height:78%"></div>
+        <div class="bar" style="height:55%"></div>
+        <div class="bar active" style="height:90%"></div>
+        <div class="bar" style="height:67%"></div>
+        <div class="bar active" style="height:82%"></div>
+        <div class="bar" style="height:71%"></div>
+        <div class="bar" style="height:58%"></div>
+        <div class="bar active" style="height:95%"></div>
+        <div class="bar" style="height:63%"></div>
+      </div>
+      <div style="display:flex;gap:0.75rem;margin-top:1rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:1rem;">
+        <div style="flex:1;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.1);border-radius:8px;padding:0.75rem;text-align:center;">
+          <div style="font-size:1rem;color:#00D4FF;font-weight:600;">247</div>
+          <div style="font-size:0.6rem;color:#334155;text-transform:uppercase;margin-top:0.2rem;letter-spacing:0.08em;">Active SKUs</div>
+        </div>
+        <div style="flex:1;background:rgba(245,166,35,0.05);border:1px solid rgba(245,166,35,0.1);border-radius:8px;padding:0.75rem;text-align:center;">
+          <div style="font-size:1rem;color:#F5A623;font-weight:600;">12ms</div>
+          <div style="font-size:0.6rem;color:#334155;text-transform:uppercase;margin-top:0.2rem;letter-spacing:0.08em;">Latency</div>
+        </div>
+        <div style="flex:1;background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.1);border-radius:8px;padding:0.75rem;text-align:center;">
+          <div style="font-size:1rem;color:#22c55e;font-weight:600;">99.9%</div>
+          <div style="font-size:0.6rem;color:#334155;text-transform:uppercase;margin-top:0.2rem;letter-spacing:0.08em;">Uptime</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  FEATURE CARDS — Insurance / Automotive / Media        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div style="background:var(--bg);padding:5rem 0 0;">
+  <div class="light-inner" style="margin-bottom:2rem;">
+    <div class="section-heading reveal">Industry Verticals</div>
+    <div class="section-subheading reveal">Three industries, 12 companies, 600 SKUs — all managed in one unified platform.</div>
+  </div>
+  <div class="cards-pullup reveal">
+    <div class="feature-card ins">
+      <div class="fc-icon ins">🛡</div>
+      <div class="fc-title">Insurance</div>
+      <div class="fc-desc">Policy documents, compliance binders, claims processing kits, and office supplies managed across 4 regional companies.</div>
+      <div class="fc-companies">
+        <div class="fc-co"><div class="fc-co-dot" style="background:#1F7DB7"></div>Aaisun Shield Insurance</div>
+        <div class="fc-co"><div class="fc-co-dot" style="background:#1F7DB7"></div>Aaisun Protect Group</div>
+        <div class="fc-co"><div class="fc-co-dot" style="background:#1F7DB7"></div>Aaisun Risk Advisors</div>
+        <div class="fc-co"><div class="fc-co-dot" style="background:#1F7DB7"></div>Aaisun Premier Life</div>
+      </div>
+      <a href="inventory.html" class="fc-link">Open Insurance Inventory →</a>
+    </div>
+    <div class="feature-card auto">
+      <div class="fc-icon auto">🚗</div>
+      <div class="fc-title">Automotive</div>
+      <div class="fc-desc">Engine components, brake assemblies, electronic modules, and drivetrain parts across 4 manufacturing and supply chain entities.</div>
+      <div class="fc-companies">
+        <div class="fc-co"><div class="fc-co-dot" style="background:#A26200"></div>Aaisun MotorWorks</div>
+        <div class="fc-co"><div class="fc-co-dot" style="background:#A26200"></div>Aaisun AutoParts Co.</div>
+        <div class="fc-co"><div class="fc-co-dot" style="background:#A26200"></div>Aaisun Drive Systems</div>
+        <div class="fc-co"><div class="fc-co-dot" style="background:#A26200"></div>Aaisun Fleet Solutions</div>
+      </div>
+      <a href="inventory.html" class="fc-link">Open Automotive Inventory →</a>
+    </div>
+    <div class="feature-card med">
+      <div class="fc-icon med">🎬</div>
+      <div class="fc-title">Media</div>
+      <div class="fc-desc">Camera equipment, broadcast hardware, publishing stock, and digital production tools for 4 media production and content companies.</div>
+      <div class="fc-companies">
+        <div class="fc-co"><div class="fc-co-dot" style="background:#5A3EA0"></div>Aaisun Media Studios</div>
+        <div class="fc-co"><div class="fc-co-dot" style="background:#5A3EA0"></div>Aaisun Publishing House</div>
+        <div class="fc-co"><div class="fc-co-dot" style="background:#5A3EA0"></div>Aaisun Broadcast Corp.</div>
+        <div class="fc-co"><div class="fc-co-dot" style="background:#5A3EA0"></div>Aaisun Digital Labs</div>
+      </div>
+      <a href="inventory.html" class="fc-link">Open Media Inventory →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  QUICK STATS                                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="light-section">
+  <div class="light-inner">
+    <div class="quickstats reveal">
+      <div class="qs-card">
+        <div class="qs-icon">📦</div>
+        <div class="qs-value">600</div>
+        <div class="qs-label">Total SKUs Tracked</div>
+        <div class="qs-badge tag-green">50 per company</div>
+      </div>
+      <div class="qs-card">
+        <div class="qs-icon">🏢</div>
+        <div class="qs-value">8</div>
+        <div class="qs-label">Verified Suppliers</div>
+        <div class="qs-badge tag-blue">Across 6 cities</div>
+      </div>
+      <div class="qs-card">
+        <div class="qs-icon">🚚</div>
+        <div class="qs-value">8</div>
+        <div class="qs-label">Carrier Partners</div>
+        <div class="qs-badge tag-amber">Pan-India coverage</div>
+      </div>
+      <div class="qs-card">
+        <div class="qs-icon">👥</div>
+        <div class="qs-value">600</div>
+        <div class="qs-label">Warehouse Staff</div>
+        <div class="qs-badge tag-gray">3 shifts · 12 sites</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  SOLUTIONS — with tabs                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="solutions" class="solutions-bg">
   <div class="section-inner">
     <div class="reveal">
-      <span class="section-label">Industries We Serve</span>
-      <h2 class="section-title">Domain AI, Built for<br/>Your Industry's Reality</h2>
+      <span class="section-label">Our Solutions</span>
+      <h2 class="section-title">Applied AI That<br>Moves the Needle</h2>
       <p class="section-sub">
-        We don't build generic AI. Every solution is engineered around the
-        operational DNA of your sector — constraints, regulations, and all.
+        From predictive intelligence to generative automation — purpose-built modules that deploy fast and deliver measurable outcomes.
       </p>
     </div>
 
-    <div class="industries-grid reveal" style="transition-delay:0.1s">
+    <div class="solutions-tabs reveal">
+      <button class="tab-btn active" onclick="setTab(this,'supply')">Supply Chain AI</button>
+      <button class="tab-btn" onclick="setTab(this,'insurance')">Insurance AI</button>
+      <button class="tab-btn" onclick="setTab(this,'crossindustry')">Cross-Industry AI</button>
+    </div>
+
+    <div id="supply" class="solutions-grid tab-content">
+      <div class="solution-card reveal">
+        <div class="sol-icon-wrap">📈</div>
+        <div class="sol-title">Demand Forecasting</div>
+        <div class="sol-desc">ML models trained on your SKU history, market signals, and external factors — delivering 95%+ accuracy across planning horizons.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal">
+        <div class="sol-icon-wrap">📦</div>
+        <div class="sol-title">Inventory Optimization</div>
+        <div class="sol-desc">Eliminate dead stock and prevent stockouts with dynamic safety stock calculations and reorder point automation.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal">
+        <div class="sol-icon-wrap">🤖</div>
+        <div class="sol-title">Warehouse Automation</div>
+        <div class="sol-desc">Computer vision–powered QC, pick-path optimization, and autonomous slotting intelligence for modern DCs.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal">
+        <div class="sol-icon-wrap">🗺️</div>
+        <div class="sol-title">Route Optimization</div>
+        <div class="sol-desc">Real-time, multi-constraint routing that reduces last-mile costs by up to 25% while improving delivery SLAs.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+    </div>
+
+    <div id="insurance" class="solutions-grid tab-content hidden">
+      <div class="solution-card">
+        <div class="sol-icon-wrap">🛡️</div>
+        <div class="sol-title">Claims Triage AI</div>
+        <div class="sol-desc">Instant claims classification, fraud scoring, and adjudication support — cutting processing time by 3×.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card">
+        <div class="sol-icon-wrap">🔍</div>
+        <div class="sol-title">Fraud Detection</div>
+        <div class="sol-desc">Behavioral anomaly detection and network graph analysis to surface fraud rings before they cost you.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card">
+        <div class="sol-icon-wrap">📝</div>
+        <div class="sol-title">AI Underwriting</div>
+        <div class="sol-desc">Risk scoring models trained on claims history, geospatial data, and third-party enrichment signals.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+    </div>
+
+    <div id="crossindustry" class="solutions-grid tab-content hidden">
+      <div class="solution-card">
+        <div class="sol-icon-wrap">🧠</div>
+        <div class="sol-title">Generative AI Co-pilot</div>
+        <div class="sol-desc">Enterprise LLM assistant trained on your internal data — docs, SOPs, and knowledge bases — with full audit trails.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card">
+        <div class="sol-icon-wrap">📊</div>
+        <div class="sol-title">Unified Analytics</div>
+        <div class="sol-desc">Cross-functional BI layer connecting supply chain, finance, and operations into one coherent intelligence plane.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  INDUSTRIES — dark grid cards                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="industries" class="industries-bg">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;margin-bottom:0;">
+      <span class="section-label">Industries We Serve</span>
+      <h2 class="section-title">Domain AI, Built for<br>Your Industry's Reality</h2>
+      <p class="section-sub" style="margin:0 auto 0;">
+        We don't build generic AI. Every solution is engineered around the operational DNA of your sector — constraints, regulations, and all.
+      </p>
+    </div>
+    <div class="industries-grid reveal">
       <div class="industry-card">
         <span class="industry-icon">🏭</span>
         <div class="industry-name">Manufacturing</div>
@@ -1240,400 +1339,236 @@
   </div>
 </section>
 
-<!-- ===== SOLUTIONS ===== -->
-<section id="solutions" class="solutions-bg">
-  <div class="section-inner">
-    <div class="reveal">
-      <span class="section-label">Our Solutions</span>
-      <h2 class="section-title">Applied AI That<br/>Moves the Needle</h2>
-      <p class="section-sub">
-        From predictive intelligence to generative automation — purpose-built modules
-        that deploy fast and deliver measurable outcomes.
-      </p>
-    </div>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  APPLICATIONS                                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="light-section" id="apps">
+  <div class="light-inner">
+    <div class="section-heading reveal">Applications</div>
+    <div class="section-subheading reveal">All modules within the Aaisun development project — click to open.</div>
+    <div class="apps-grid reveal">
 
-    <div class="solutions-tabs reveal" style="margin-top:3rem">
-      <button class="tab-btn active" onclick="setTab(this, 'supply')">Supply Chain AI</button>
-      <button class="tab-btn" onclick="setTab(this, 'insurance')">Insurance AI</button>
-      <button class="tab-btn" onclick="setTab(this, 'crossindustry')">Cross-Industry AI</button>
-    </div>
+      <div class="app-card">
+        <div class="app-icon" style="background:#D6EAF6">📦</div>
+        <div class="app-info">
+          <div class="app-title">Inventory Management</div>
+          <div class="app-desc">Full-stack inventory system with 50 SKUs per company across 3 industries. Includes dashboard, receiving, storage, pick &amp; pack, shipping, labelling, POs, returns, and reports.</div>
+          <div class="app-meta">
+            <span class="app-tag tag-green">Live</span>
+            <span class="app-tag tag-blue">v3.0</span>
+            <a href="inventory.html" class="app-link">Open →</a>
+          </div>
+        </div>
+      </div>
 
-    <div id="supply" class="solutions-grid tab-content">
-      <div class="solution-card reveal">
-        <div class="sol-icon-wrap">📈</div>
-        <div class="sol-title">Demand Forecasting</div>
-        <div class="sol-desc">ML models trained on your SKU history, market signals, and external factors — delivering 95%+ accuracy across planning horizons.</div>
-        <a href="#" class="sol-link">Learn more →</a>
+      <div class="app-card">
+        <div class="app-icon" style="background:#D4F0E3">📊</div>
+        <div class="app-info">
+          <div class="app-title">Analytics Dashboard</div>
+          <div class="app-desc">Real-time KPIs, trend analysis, and inventory health metrics across all industries and companies. Drill down by zone, supplier, or company.</div>
+          <div class="app-meta">
+            <span class="app-tag tag-green">Live</span>
+            <span class="app-tag tag-blue">v1.0</span>
+            <a href="inventory-dashboard.html" class="app-link">Open →</a>
+          </div>
+        </div>
       </div>
-      <div class="solution-card reveal" style="transition-delay:0.05s">
-        <div class="sol-icon-wrap">📦</div>
-        <div class="sol-title">Inventory Optimization</div>
-        <div class="sol-desc">Eliminate dead stock and prevent stockouts with dynamic safety stock calculations and reorder point automation.</div>
-        <a href="#" class="sol-link">Learn more →</a>
-      </div>
-      <div class="solution-card reveal" style="transition-delay:0.1s">
-        <div class="sol-icon-wrap">🤖</div>
-        <div class="sol-title">Warehouse Automation</div>
-        <div class="sol-desc">Computer vision–powered QC, pick-path optimization, and autonomous slotting intelligence for modern DCs.</div>
-        <a href="#" class="sol-link">Learn more →</a>
-      </div>
-      <div class="solution-card reveal" style="transition-delay:0.15s">
-        <div class="sol-icon-wrap">🗺️</div>
-        <div class="sol-title">Route Optimization</div>
-        <div class="sol-desc">Real-time, multi-constraint routing that reduces last-mile costs by up to 25% while improving delivery SLAs.</div>
-        <a href="#" class="sol-link">Learn more →</a>
-      </div>
-    </div>
 
-    <div id="insurance" class="solutions-grid tab-content" style="display:none">
-      <div class="solution-card reveal">
-        <div class="sol-icon-wrap">⚡</div>
-        <div class="sol-title">Claims Automation</div>
-        <div class="sol-desc">End-to-end intelligent claims processing — from first notice of loss to settlement — with straight-through processing rates of 70%+.</div>
-        <a href="#" class="sol-link">Learn more →</a>
+      <div class="app-card">
+        <div class="app-icon" style="background:#F5E8D0">🔔</div>
+        <div class="app-info">
+          <div class="app-title">Alert &amp; Notifications</div>
+          <div class="app-desc">Automated stock alerts, reorder triggers, and supplier notifications for low-stock and out-of-stock conditions across all companies.</div>
+          <div class="app-meta">
+            <span class="app-tag tag-amber">Coming Soon</span>
+            <a href="#" class="app-link disabled">Soon</a>
+          </div>
+        </div>
       </div>
-      <div class="solution-card reveal" style="transition-delay:0.05s">
-        <div class="sol-icon-wrap">🔍</div>
-        <div class="sol-title">Fraud Detection</div>
-        <div class="sol-desc">Graph neural networks and anomaly detection models that catch complex fraud rings before payout — saving millions per year.</div>
-        <a href="#" class="sol-link">Learn more →</a>
-      </div>
-      <div class="solution-card reveal" style="transition-delay:0.1s">
-        <div class="sol-icon-wrap">📊</div>
-        <div class="sol-title">Risk Scoring</div>
-        <div class="sol-desc">Granular, real-time risk scores for portfolios, policies, and customers — powering smarter underwriting decisions.</div>
-        <a href="#" class="sol-link">Learn more →</a>
-      </div>
-      <div class="solution-card reveal" style="transition-delay:0.15s">
-        <div class="sol-icon-wrap">🧠</div>
-        <div class="sol-title">Underwriting Intelligence</div>
-        <div class="sol-desc">AI-assisted underwriting recommendations that reduce loss ratios by 15–20% while improving binding speed.</div>
-        <a href="#" class="sol-link">Learn more →</a>
-      </div>
-    </div>
 
-    <div id="crossindustry" class="solutions-grid tab-content" style="display:none">
-      <div class="solution-card reveal">
-        <div class="sol-icon-wrap">🔮</div>
-        <div class="sol-title">Predictive Analytics</div>
-        <div class="sol-desc">Universal predictive layer that works across datasets — from customer churn to equipment failure — with explainable outputs.</div>
-        <a href="#" class="sol-link">Learn more →</a>
+      <div class="app-card">
+        <div class="app-icon" style="background:#E8E2F8">🤖</div>
+        <div class="app-info">
+          <div class="app-title">AI Demand Forecasting</div>
+          <div class="app-desc">Machine learning-powered demand prediction for optimal reorder points, seasonal trends, and procurement planning.</div>
+          <div class="app-meta">
+            <span class="app-tag tag-purple">Planned</span>
+            <a href="#" class="app-link disabled">Soon</a>
+          </div>
+        </div>
       </div>
-      <div class="solution-card reveal" style="transition-delay:0.05s">
-        <div class="sol-icon-wrap">✨</div>
-        <div class="sol-title">Generative AI Solutions</div>
-        <div class="sol-desc">Enterprise-grade GenAI for document processing, report generation, and conversational intelligence — secured for your data.</div>
-        <a href="#" class="sol-link">Learn more →</a>
+
+      <div class="app-card">
+        <div class="app-icon" style="background:#D6EAF6">🏢</div>
+        <div class="app-info">
+          <div class="app-title">Supplier Portal</div>
+          <div class="app-desc">Dedicated supplier-facing portal for PO acknowledgment, delivery scheduling, invoice submission, and quality certifications.</div>
+          <div class="app-meta">
+            <span class="app-tag tag-amber">Coming Soon</span>
+            <a href="#" class="app-link disabled">Soon</a>
+          </div>
+        </div>
       </div>
-      <div class="solution-card reveal" style="transition-delay:0.1s">
-        <div class="sol-icon-wrap">⚙️</div>
-        <div class="sol-title">Process Automation</div>
-        <div class="sol-desc">Intelligent process mining and RPA augmentation that identifies and automates your highest-value operational bottlenecks.</div>
-        <a href="#" class="sol-link">Learn more →</a>
+
+      <div class="app-card">
+        <div class="app-icon" style="background:#D4F0E3">📋</div>
+        <div class="app-info">
+          <div class="app-title">Compliance Manager</div>
+          <div class="app-desc">Industry-specific compliance tracking — insurance regulatory filings, automotive safety standards, and media content licensing records.</div>
+          <div class="app-meta">
+            <span class="app-tag tag-purple">Planned</span>
+            <a href="#" class="app-link disabled">Soon</a>
+          </div>
+        </div>
       </div>
-      <div class="solution-card reveal" style="transition-delay:0.15s">
-        <div class="sol-icon-wrap">👁️</div>
-        <div class="sol-title">Computer Vision</div>
-        <div class="sol-desc">Real-time visual inspection, defect detection, and video analytics that match human accuracy at machine speed.</div>
-        <a href="#" class="sol-link">Learn more →</a>
-      </div>
+
     </div>
   </div>
-</section>
+</div>
 
-<!-- ===== WHY AAISUN ===== -->
-<section id="why" class="why-section">
-  <div class="section-inner">
-    <div class="why-grid">
-      <div>
-        <div class="reveal">
-          <span class="section-label">Why AAISUN</span>
-          <h2 class="section-title">AI Built for<br/>Accountability</h2>
-          <p class="section-sub" style="margin-bottom:2.5rem">
-            Anyone can deploy a model. We engineer AI that executives can trust,
-            finance can validate, and operations can depend on — every single day.
-          </p>
-        </div>
-        <div class="why-features">
-          <div class="why-feature reveal">
-            <div class="feature-icon">🏗️</div>
-            <div>
-              <div class="feature-title">Domain-First Architecture</div>
-              <div class="feature-desc">Models trained on industry-specific data by veterans with 15+ years in supply chain and insurance operations.</div>
-            </div>
-          </div>
-          <div class="why-feature reveal" style="transition-delay:0.05s">
-            <div class="feature-icon">🔌</div>
-            <div>
-              <div class="feature-title">Enterprise Integration Ready</div>
-              <div class="feature-desc">Native connectors for SAP, Blue Yonder, Oracle SCM, Salesforce, Guidewire, and 40+ enterprise systems.</div>
-            </div>
-          </div>
-          <div class="why-feature reveal" style="transition-delay:0.1s">
-            <div class="feature-icon">📋</div>
-            <div>
-              <div class="feature-title">Explainable & Auditable</div>
-              <div class="feature-desc">Every prediction comes with a traceable rationale. Our AI passes the CFO test — and the regulator test.</div>
-            </div>
-          </div>
-          <div class="why-feature reveal" style="transition-delay:0.15s">
-            <div class="feature-icon">📈</div>
-            <div>
-              <div class="feature-title">Proven ROI in 90 Days</div>
-              <div class="feature-desc">Our deployment framework is designed to surface measurable value within one quarter — or we work until it does.</div>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  INDUSTRIES DETAIL — light cards                       -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="light-section" style="padding-top:0;">
+  <div class="light-inner">
+    <div class="section-heading reveal">Industries &amp; Products</div>
+    <div class="section-subheading reveal">50 unique products per industry, tracked across 4 companies each.</div>
+    <div class="ind-grid reveal">
 
-      <div class="metrics-showcase reveal" style="transition-delay:0.2s">
-        <div class="metric-card">
-          <div class="metric-card-val">40%</div>
-          <div class="metric-card-label">Avg. Operational Cost Reduction</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-card-val">3×</div>
-          <div class="metric-card-label">Faster Claims Resolution</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-card-val">95%+</div>
-          <div class="metric-card-label">Forecast Accuracy Achieved</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-card-val">200%</div>
-          <div class="metric-card-label">Average ROI Across Deployments</div>
-        </div>
-        <div class="metric-card span2" style="background: linear-gradient(135deg, rgba(245,166,35,0.08) 0%, rgba(11,42,107,0.4) 100%); border-color: rgba(245,166,35,0.2);">
-          <div class="metric-card-val" style="font-size:2rem;">90 Days</div>
-          <div class="metric-card-label">Time to Measurable Value</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== TESTIMONIALS ===== -->
-<section class="testimonials-bg">
-  <div class="section-inner">
-    <div class="reveal" style="text-align:center;margin-bottom:0">
-      <span class="section-label">Client Stories</span>
-      <h2 class="section-title">What Leaders Are Saying</h2>
-    </div>
-    <div class="testimonials-grid">
-      <div class="testimonial-card reveal">
-        <div class="stars">★★★★★</div>
-        <p class="testimonial-text">
-          "AAISUN's demand forecasting reduced our forecast error from 28% to under 6%
-          within 60 days. The ROI was visible before the implementation was even complete."
-        </p>
-        <div class="testimonial-author">
-          <div class="author-avatar">RK</div>
+      <div class="ind-card">
+        <div class="ind-header">
+          <div class="ind-icon" style="background:#D6EAF6;color:#1F7DB7">🛡</div>
           <div>
-            <div class="author-name">Rajesh Kumar</div>
-            <div class="author-role">COO, Global Logistics Leader</div>
+            <div class="ind-title">Insurance</div>
+            <div class="ind-subtitle">4 companies · 50 product SKUs</div>
           </div>
+        </div>
+        <div class="ind-products">
+          <div class="ind-products-label">Sample Products</div>
+          <span class="product-pill">Policy Folders</span>
+          <span class="product-pill">Claim Forms</span>
+          <span class="product-pill">Identity Cards</span>
+          <span class="product-pill">Compliance Binders</span>
+          <span class="product-pill">Archival Boxes</span>
+          <span class="product-pill">Signature Pads</span>
+          <span class="product-pill">Certificate Packs</span>
+          <span class="product-pill">+ 43 more</span>
+        </div>
+        <div class="ind-companies">
+          <div class="ind-companies-label">Companies</div>
+          <div class="co-row"><div class="co-row-dot" style="background:#1F7DB7"></div>Aaisun Shield Insurance<div class="co-badge tag-blue">ASI</div></div>
+          <div class="co-row"><div class="co-row-dot" style="background:#1F7DB7"></div>Aaisun Protect Group<div class="co-badge tag-blue">APG</div></div>
+          <div class="co-row"><div class="co-row-dot" style="background:#1F7DB7"></div>Aaisun Risk Advisors<div class="co-badge tag-blue">ARA</div></div>
+          <div class="co-row"><div class="co-row-dot" style="background:#1F7DB7"></div>Aaisun Premier Life<div class="co-badge tag-blue">APL</div></div>
         </div>
       </div>
 
-      <div class="testimonial-card reveal" style="transition-delay:0.1s">
-        <div class="stars">★★★★★</div>
-        <p class="testimonial-text">
-          "Our claims processing team was skeptical about AI. Six months later, they
-          can't imagine operating without it. AAISUN handled change management brilliantly."
-        </p>
-        <div class="testimonial-author">
-          <div class="author-avatar">PM</div>
+      <div class="ind-card">
+        <div class="ind-header">
+          <div class="ind-icon" style="background:#F5E8D0;color:#A26200">🚗</div>
           <div>
-            <div class="author-name">Priya Mehta</div>
-            <div class="author-role">VP Claims, Leading Insurance Group</div>
+            <div class="ind-title">Automotive</div>
+            <div class="ind-subtitle">4 companies · 50 product SKUs</div>
           </div>
+        </div>
+        <div class="ind-products">
+          <div class="ind-products-label">Sample Products</div>
+          <span class="product-pill">Engine Block Sets</span>
+          <span class="product-pill">Brake Assemblies</span>
+          <span class="product-pill">Turbocharger Kits</span>
+          <span class="product-pill">ABS Modules</span>
+          <span class="product-pill">Fuel Injectors</span>
+          <span class="product-pill">Airbag Modules</span>
+          <span class="product-pill">CV Joints</span>
+          <span class="product-pill">+ 43 more</span>
+        </div>
+        <div class="ind-companies">
+          <div class="ind-companies-label">Companies</div>
+          <div class="co-row"><div class="co-row-dot" style="background:#A26200"></div>Aaisun MotorWorks<div class="co-badge tag-amber">AMW</div></div>
+          <div class="co-row"><div class="co-row-dot" style="background:#A26200"></div>Aaisun AutoParts Co.<div class="co-badge tag-amber">AAP</div></div>
+          <div class="co-row"><div class="co-row-dot" style="background:#A26200"></div>Aaisun Drive Systems<div class="co-badge tag-amber">ADS</div></div>
+          <div class="co-row"><div class="co-row-dot" style="background:#A26200"></div>Aaisun Fleet Solutions<div class="co-badge tag-amber">AFS</div></div>
         </div>
       </div>
 
-      <div class="testimonial-card reveal" style="transition-delay:0.2s">
-        <div class="stars">★★★★★</div>
-        <p class="testimonial-text">
-          "We evaluated 6 AI vendors. AAISUN was the only one that understood our
-          supply chain constraints as well as our IT architecture. That combination is rare."
-        </p>
-        <div class="testimonial-author">
-          <div class="author-avatar">AS</div>
+      <div class="ind-card">
+        <div class="ind-header">
+          <div class="ind-icon" style="background:#E8E2F8;color:#5A3EA0">🎬</div>
           <div>
-            <div class="author-name">Arjun Sharma</div>
-            <div class="author-role">CIO, Manufacturing Conglomerate</div>
+            <div class="ind-title">Media</div>
+            <div class="ind-subtitle">4 companies · 50 product SKUs</div>
           </div>
         </div>
+        <div class="ind-products">
+          <div class="ind-products-label">Sample Products</div>
+          <span class="product-pill">4K Camera Bodies</span>
+          <span class="product-pill">LED Lighting Rigs</span>
+          <span class="product-pill">Drone Units</span>
+          <span class="product-pill">Studio Microphones</span>
+          <span class="product-pill">Streaming Encoders</span>
+          <span class="product-pill">Podcast Mixers</span>
+          <span class="product-pill">Magazine Bundles</span>
+          <span class="product-pill">+ 43 more</span>
+        </div>
+        <div class="ind-companies">
+          <div class="ind-companies-label">Companies</div>
+          <div class="co-row"><div class="co-row-dot" style="background:#5A3EA0"></div>Aaisun Media Studios<div class="co-badge tag-purple">AMS</div></div>
+          <div class="co-row"><div class="co-row-dot" style="background:#5A3EA0"></div>Aaisun Publishing House<div class="co-badge tag-purple">APH</div></div>
+          <div class="co-row"><div class="co-row-dot" style="background:#5A3EA0"></div>Aaisun Broadcast Corp.<div class="co-badge tag-purple">ABC</div></div>
+          <div class="co-row"><div class="co-row-dot" style="background:#5A3EA0"></div>Aaisun Digital Labs<div class="co-badge tag-purple">ADL</div></div>
+        </div>
       </div>
+
     </div>
   </div>
-</section>
+</div>
 
-<!-- ===== CTA ===== -->
-<section id="demo" class="cta-section">
-  <div class="cta-inner">
-    <div class="reveal">
-      <span class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Ready to Begin?</span>
-      <h2 class="cta-title">
-        See AAISUN in Action.<br/>
-        <span style="color:var(--gold)">In Your Data.</span>
-      </h2>
-      <p class="cta-sub">
-        Book a personalized demo with our solutions team. We'll map AAISUN's capabilities
-        to your specific operational context — no generic pitch decks, no pressure.
-      </p>
-      <div class="cta-buttons">
-        <a href="#" class="btn-primary" style="padding:1rem 2.5rem;font-size:1rem">
-          Book a Demo
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <a href="#" class="btn-outline" style="padding:1rem 2.5rem;font-size:1rem">
-          Download Whitepaper
-        </a>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  FOOTER                                                -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<footer class="footer-light">
+  <div class="footer-light-inner">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+        <img src="Aaisun.jpg" width="28" height="28" style="border-radius:6px;object-fit:cover;" alt="Aaisun">
+        <div class="footer-brand">Aaisun</div>
       </div>
-
-      <div style="display:flex;justify-content:center;gap:3rem;margin-top:3rem;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:#334155">
-          <span style="color:#22c55e">✓</span> No commitment required
-        </div>
-        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:#334155">
-          <span style="color:#22c55e">✓</span> Response within 24 hours
-        </div>
-        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:#334155">
-          <span style="color:#22c55e">✓</span> GDPR & SOC 2 compliant
-        </div>
-      </div>
+      <div class="footer-sub">Inventory Suite v3.0 · Azure Curator Design System · Built for scale</div>
     </div>
-  </div>
-</section>
-
-<!-- ===== FOOTER ===== -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div>
-        <a href="#" class="logo" style="margin-bottom:1rem;display:inline-flex">
-          <svg width="36" height="36" viewBox="0 0 42 42" fill="none">
-            <rect width="42" height="42" rx="10" fill="rgba(11,42,107,0.5)"/>
-            <path d="M21 8L32 28H10L21 8Z" fill="none" stroke="#F5A623" stroke-width="2" stroke-linejoin="round"/>
-            <circle cx="21" cy="21" r="4" fill="#F5A623" opacity="0.8"/>
-          </svg>
-          <span class="logo-text" style="font-size:1.2rem">AA<span class="accent">ISUN</span></span>
-        </a>
-        <p class="footer-brand-desc">
-          Enterprise AI for Supply Chain and Insurance. Built by domain veterans.
-          Trusted by industry leaders. Delivering measurable ROI since day one.
-        </p>
-        <div style="margin-top:1.5rem;display:flex;gap:0.75rem">
-          <a href="#" style="width:34px;height:34px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#334155;text-decoration:none;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(245,166,35,0.3)';this.style.color='#F5A623'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='#334155'">in</a>
-          <a href="#" style="width:34px;height:34px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#334155;text-decoration:none;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(245,166,35,0.3)';this.style.color='#F5A623'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='#334155'">𝕏</a>
-          <a href="#" style="width:34px;height:34px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#334155;text-decoration:none;font-size:0.85rem;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(245,166,35,0.3)';this.style.color='#F5A623'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='#334155'">gh</a>
-        </div>
-      </div>
-
-      <div>
-        <div class="footer-col-title">Solutions</div>
-        <ul class="footer-links">
-          <li><a href="#">Demand Forecasting</a></li>
-          <li><a href="#">Inventory Optimization</a></li>
-          <li><a href="#">Claims Automation</a></li>
-          <li><a href="#">Fraud Detection</a></li>
-          <li><a href="#">Predictive Analytics</a></li>
-          <li><a href="#">Generative AI</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <div class="footer-col-title">Company</div>
-        <ul class="footer-links">
-          <li><a href="#">About AAISUN</a></li>
-          <li><a href="#">Leadership Team</a></li>
-          <li><a href="#">Case Studies</a></li>
-          <li><a href="#">Insights & Blog</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Press</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <div class="footer-col-title">Contact</div>
-        <ul class="footer-links">
-          <li><a href="#">Book a Demo</a></li>
-          <li><a href="#">Request Consultation</a></li>
-          <li><a href="mailto:hello@aaisun.com">hello@aaisun.com</a></li>
-          <li><a href="#">Partner With Us</a></li>
-          <li><a href="#">Support Portal</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <span class="footer-copy">© 2025 AAISUN Technologies Pvt. Ltd. All rights reserved.</span>
-      <div class="footer-legal">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Cookie Settings</a>
-      </div>
+    <div class="footer-links">
+      <a href="index.html" class="footer-link">Home</a>
+      <a href="inventory.html" class="footer-link">Inventory</a>
+      <a href="inventory-dashboard.html" class="footer-link">Dashboard</a>
+      <a href="inventory.html" class="footer-link">Reports</a>
+      <a href="inventory.html" class="footer-link">Suppliers</a>
     </div>
   </div>
 </footer>
 
 <script>
-  // ===== SCROLL REVEAL =====
+  // ── TAB SWITCHER ──────────────────────────────────────
+  function setTab(btn, id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.remove('hidden');
+  }
+
+  // ── SCROLL REVEAL ─────────────────────────────────────
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(el => {
-      if (el.isIntersecting) {
-        el.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // ===== TABS =====
-  function setTab(btn, tabId) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
-    btn.classList.add('active');
-    document.getElementById(tabId).style.display = 'grid';
-    document.querySelectorAll('#' + tabId + ' .reveal').forEach(el => {
-      el.classList.remove('visible');
-      setTimeout(() => el.classList.add('visible'), 50);
-    });
-  }
-
-  // ===== NAV SCROLL =====
+  // ── NAV SCROLL SHADOW ─────────────────────────────────
   window.addEventListener('scroll', () => {
     const nav = document.querySelector('nav');
-    if (window.scrollY > 50) {
-      nav.style.background = 'rgba(6, 14, 34, 0.97)';
-    } else {
-      nav.style.background = 'rgba(6, 14, 34, 0.85)';
-    }
-  });
-
-  // ===== CHART ANIMATION =====
-  const bars = document.querySelectorAll('.bar');
-  bars.forEach((bar, i) => {
-    const h = parseInt(bar.style.height);
-    bar.style.height = '5%';
-    setTimeout(() => {
-      bar.style.transition = 'height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      bar.style.height = h + '%';
-    }, 800 + i * 80);
-  });
-
-  // ===== SMOOTH SCROLL =====
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
+    nav.style.boxShadow = window.scrollY > 20
+      ? '0 2px 30px rgba(0,0,0,0.45)'
+      : 'none';
   });
 </script>
+
 </body>
 </html>

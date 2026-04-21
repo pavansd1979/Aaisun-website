@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aaisun — Inventory Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#1F7DB7;
+  --primary-dark:#1564A0;
+  --primary-light:#D6EAF6;
+  --secondary:#5F7A92;
+  --tertiary:#A26200;
+  --tertiary-light:#F5E8D0;
+  --bg:#EDF2F6;
+  --surface:#FFFFFF;
+  --surface-low:#F0F5F9;
+  --surface-container:#E3EBF2;
+  --surface-high:#D6E2EC;
+  --surface-highest:#C8D8E6;
+  --on-surface:#2C3E50;
+  --on-surface-2:#4A6275;
+  --on-surface-3:#7A95A8;
+  --on-surface-4:#A8BEC9;
+  --ghost:rgba(116,119,124,0.15);
+  --green:#0A6B3E;--green-light:#D4F0E3;--green-mid:#7DD4B0;
+  --amber:#A26200;--amber-light:#F5E8D0;--amber-mid:#E4B86A;
+  --red:#B02A2A;--red-light:#F5DADA;--red-mid:#E08080;
+  --blue:#1F7DB7;--blue-light:#D6EAF6;--blue-mid:#7FB8D8;
+  --purple:#5A3EA0;--purple-light:#E8E2F8;--purple-mid:#AFA0DC;
+  --teal:#0A5C46;--teal-light:#D0EDDF;
+  --font:'Inter',sans-serif;
+  --font-serif:'Noto Serif',serif;
+  --radius:6px;--radius-lg:10px;--radius-xl:14px;
+  --shadow:0 1px 4px rgba(31,125,183,0.06),0 4px 16px rgba(31,125,183,0.04);
+  --shadow-lg:0 4px 20px rgba(31,125,183,0.10),0 12px 40px rgba(31,125,183,0.06);
+}
+body{font-family:var(--font);background:var(--bg);color:var(--on-surface);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* ── TOPBAR ── */
+#topbar{
+  height:58px;background:linear-gradient(135deg,#1564A0 0%,var(--primary) 60%,#2A8EC8 100%);
+  display:flex;align-items:center;padding:0 28px;gap:16px;
+  box-shadow:0 2px 12px rgba(31,125,183,0.25);position:sticky;top:0;z-index:100;
+}
+.tb-logo{display:flex;align-items:center;gap:10px}
+.tb-logo-icon{
+  width:32px;height:32px;border-radius:var(--radius);
+  background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff;font-family:var(--font-serif);
+}
+.tb-logo-name{font-size:15px;font-weight:700;color:#fff;font-family:var(--font-serif)}
+.tb-logo-sub{font-size:9px;color:rgba(255,255,255,0.65);letter-spacing:0.08em;text-transform:uppercase}
+.tb-divider{width:1px;height:28px;background:rgba(255,255,255,0.2);margin:0 4px}
+.tb-title{font-size:14px;font-weight:600;color:rgba(255,255,255,0.9);letter-spacing:0.01em}
+.tb-spacer{flex:1}
+.tb-back{
+  display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius);
+  background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);
+  color:#fff;font-size:12px;font-weight:500;text-decoration:none;transition:all .15s;
+}
+.tb-back:hover{background:rgba(255,255,255,0.25)}
+.tb-date{font-size:11px;color:rgba(255,255,255,0.7)}
+
+/* ── INDUSTRY TABS ── */
+.ind-tab-bar{
+  background:var(--surface);
+  border-bottom:2px solid var(--surface-container);
+  display:flex;align-items:stretch;padding:0 28px;gap:0;
+  box-shadow:var(--shadow);
+  position:sticky;top:58px;z-index:90;
+}
+.ind-tab{
+  display:flex;align-items:center;gap:8px;
+  padding:14px 24px 12px;font-size:13px;font-weight:500;
+  color:var(--on-surface-3);cursor:pointer;border-bottom:2px solid transparent;
+  margin-bottom:-2px;transition:all .15s;white-space:nowrap;
+}
+.ind-tab .ind-icon{font-size:16px}
+.ind-tab:hover:not(.active){color:var(--on-surface-2);background:var(--surface-low)}
+.ind-tab.active.ins-active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.ind-tab.active.auto-active{color:var(--amber);border-bottom-color:var(--amber);font-weight:600}
+.ind-tab.active.med-active{color:var(--purple);border-bottom-color:var(--purple);font-weight:600}
+.ind-count{
+  font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;
+}
+.ins-count{background:var(--blue-light);color:var(--blue)}
+.auto-count{background:var(--amber-light);color:var(--amber)}
+.med-count{background:var(--purple-light);color:var(--purple)}
+.ind-tab-spacer{flex:1}
+.ind-summary{display:flex;align-items:center;gap:18px;padding:0 0 0 20px}
+.ind-sum-item{font-size:11px;color:var(--on-surface-3)}
+.ind-sum-item strong{font-size:13px;font-weight:700;color:var(--on-surface)}
+
+/* ── MAIN LAYOUT ── */
+#main{padding:24px 28px;max-width:1600px;margin:0 auto}
+
+/* ── KPI CARDS ── */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{
+  background:var(--surface);border-radius:var(--radius-lg);
+  padding:18px 20px 16px;
+  box-shadow:var(--shadow);border:1px solid var(--ghost);
+  transition:transform .15s,box-shadow .15s;
+}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.kpi-label{font-size:10px;font-weight:600;color:var(--on-surface-3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px}
+.kpi-val{font-size:26px;font-weight:700;color:var(--on-surface);font-family:var(--font-serif);line-height:1;margin-bottom:6px}
+.kpi-sub{font-size:11px;color:var(--on-surface-3)}
+.kpi-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-left:6px}
+.kpi-up{background:var(--green-light);color:var(--green)}
+.kpi-down{background:var(--red-light);color:var(--red)}
+.kpi-bar{height:4px;border-radius:2px;background:var(--surface-container);margin-top:10px;overflow:hidden}
+.kpi-fill{height:100%;border-radius:2px;transition:width .4s ease}
+
+/* ── SECTION HEADER ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:14px;font-weight:700;color:var(--on-surface);font-family:var(--font-serif)}
+.section-actions{display:flex;align-items:center;gap:8px}
+
+/* ── COMPANY TABS ── */
+.co-tabs-container{
+  background:var(--surface);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow);border:1px solid var(--ghost);
+  margin-bottom:20px;overflow:hidden;
+}
+.co-tab-bar{
+  display:flex;background:var(--surface-low);border-bottom:1px solid var(--ghost);
+  padding:0 4px;gap:2px;overflow-x:auto;
+}
+.co-tab-bar::-webkit-scrollbar{height:3px}
+.co-tab-bar::-webkit-scrollbar-thumb{background:var(--surface-high);border-radius:2px}
+.co-tab{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 18px 10px;font-size:12px;font-weight:500;
+  color:var(--on-surface-3);cursor:pointer;border-bottom:2px solid transparent;
+  white-space:nowrap;transition:all .15s;border-radius:var(--radius) var(--radius) 0 0;margin-bottom:-1px;
+  flex-shrink:0;
+}
+.co-tab:hover:not(.active){background:var(--surface-container);color:var(--on-surface-2)}
+.co-tab.active{background:var(--surface);color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+.co-tab.active.ins-tab{color:var(--blue);border-bottom-color:var(--blue)}
+.co-tab.active.auto-tab{color:var(--amber);border-bottom-color:var(--amber)}
+.co-tab.active.med-tab{color:var(--purple);border-bottom-color:var(--purple)}
+.co-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.co-tab-short{
+  font-size:10px;padding:1px 5px;border-radius:4px;
+  background:var(--surface-container);color:var(--on-surface-3);font-weight:600;
+}
+.co-tab.active .co-tab-short{background:var(--primary-light);color:var(--primary)}
+.co-tab.active.auto-tab .co-tab-short{background:var(--amber-light);color:var(--amber)}
+.co-tab.active.med-tab .co-tab-short{background:var(--purple-light);color:var(--purple)}
+
+/* ── TABLE CONTAINER ── */
+.table-wrap{padding:0 0 4px}
+.table-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 10px;gap:12px;
+}
+.search-box{
+  padding:7px 14px 7px 32px;border-radius:var(--radius);
+  border:1px solid var(--ghost);background:var(--surface-low);
+  color:var(--on-surface);font-size:12px;font-family:var(--font);width:240px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237A95A8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:10px center;
+}
+.search-box:focus{outline:none;border-color:var(--primary);background:var(--surface)}
+.toolbar-right{display:flex;align-items:center;gap:8px}
+.toolbar-stat{font-size:11px;color:var(--on-surface-3)}
+.toolbar-stat strong{color:var(--on-surface);font-weight:600}
+.btn-xs{
+  padding:5px 12px;border-radius:var(--radius);
+  border:1px solid var(--ghost);background:transparent;
+  color:var(--on-surface-2);font-size:11px;font-family:var(--font);cursor:pointer;
+  transition:all .12s;
+}
+.btn-xs:hover{background:var(--surface-container)}
+.btn-xs.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-xs.primary:hover{background:var(--primary-dark)}
+
+/* ── DATA TABLE ── */
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table thead tr{background:var(--surface-low);border-bottom:1px solid var(--ghost)}
+.data-table th{
+  padding:9px 14px;text-align:left;font-size:10px;font-weight:600;
+  color:var(--on-surface-3);text-transform:uppercase;letter-spacing:0.06em;
+  white-space:nowrap;position:sticky;top:0;background:var(--surface-low);z-index:1;
+}
+.data-table th.sortable{cursor:pointer;user-select:none}
+.data-table th.sortable:hover{color:var(--on-surface-2);background:var(--surface-container)}
+.data-table th .sort-icon{margin-left:4px;opacity:0.4;font-size:9px}
+.data-table th.sorted .sort-icon{opacity:1}
+.data-table tbody tr{border-bottom:1px solid var(--ghost);transition:background .1s}
+.data-table tbody tr:last-child{border-bottom:none}
+.data-table tbody tr:hover{background:var(--surface-low)}
+.data-table td{padding:10px 14px;color:var(--on-surface-2);vertical-align:middle}
+.data-table td.bold{font-weight:600;color:var(--on-surface)}
+.td-sku{font-family:monospace;font-size:11px;color:var(--on-surface-3);background:var(--surface-container);padding:2px 6px;border-radius:4px}
+.td-money{font-variant-numeric:tabular-nums;font-weight:600;color:var(--on-surface)}
+.td-qty{font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+.qty-ok{color:var(--green)}
+.qty-low{color:var(--amber)}
+.qty-zero{color:var(--red)}
+.zone-chip{
+  font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;
+  background:var(--surface-container);color:var(--on-surface-2);
+}
+.stock-bar{display:flex;align-items:center;gap:8px}
+.mini-bar{width:60px;height:5px;border-radius:3px;background:var(--surface-container);overflow:hidden;flex-shrink:0}
+.mini-fill{height:100%;border-radius:3px}
+
+/* ── TAGS ── */
+.tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:0.03em;white-space:nowrap}
+.tag-green{background:var(--green-light);color:var(--green)}
+.tag-amber{background:var(--amber-light);color:var(--amber)}
+.tag-red{background:var(--red-light);color:var(--red)}
+.tag-blue{background:var(--blue-light);color:var(--blue)}
+.tag-purple{background:var(--purple-light);color:var(--purple)}
+.tag-teal{background:var(--teal-light);color:var(--teal)}
+.tag-gray{background:var(--surface-high);color:var(--secondary)}
+
+/* ── STATS CHARTS ROW ── */
+.charts-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+.chart-card{
+  background:var(--surface);border-radius:var(--radius-lg);
+  padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--ghost);
+}
+.chart-title{font-size:12px;font-weight:600;color:var(--on-surface-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px}
+.bar-chart{display:flex;flex-direction:column;gap:9px}
+.bar-row{display:flex;align-items:center;gap:10px}
+.bar-label{font-size:11px;color:var(--on-surface-2);width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;height:8px;border-radius:4px;background:var(--surface-container);overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.bar-val{font-size:11px;font-weight:600;color:var(--on-surface);width:40px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums}
+.donut-wrap{display:flex;align-items:center;gap:20px}
+.donut-svg{flex-shrink:0}
+.donut-legend{display:flex;flex-direction:column;gap:7px}
+.donut-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--on-surface-2)}
+.donut-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.donut-pct{margin-left:auto;font-weight:600;color:var(--on-surface);font-variant-numeric:tabular-nums}
+
+/* ── PAGINATION ── */
+.pagination{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 18px 14px;font-size:11px;color:var(--on-surface-3);
+  border-top:1px solid var(--ghost);
+}
+.page-btns{display:flex;gap:4px}
+.page-btn{
+  width:28px;height:28px;border-radius:var(--radius);
+  border:1px solid var(--ghost);background:transparent;
+  color:var(--on-surface-2);font-size:11px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font);transition:all .12s;
+}
+.page-btn:hover{background:var(--surface-container)}
+.page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* ── SCROLLABLE TABLE ── */
+.table-scroll{overflow-x:auto;overflow-y:auto;max-height:520px}
+.table-scroll::-webkit-scrollbar{width:5px;height:5px}
+.table-scroll::-webkit-scrollbar-thumb{background:var(--surface-high);border-radius:3px}
+
+/* ── SUMMARY ROW BELOW TABS ── */
+.co-summary{
+  display:flex;gap:24px;padding:10px 18px;
+  background:var(--surface-low);border-bottom:1px solid var(--ghost);
+  flex-wrap:wrap;
+}
+.co-sum-item{font-size:11px;color:var(--on-surface-3)}
+.co-sum-item strong{font-size:13px;font-weight:700;color:var(--on-surface);margin-right:3px}
+
+/* ── HIDDEN ── */
+.hidden{display:none!important}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:20px;
+  font-size:11px;color:var(--on-surface-4);
+  border-top:1px solid var(--ghost);margin-top:8px;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="tb-logo">
+    <div class="tb-logo-icon">A</div>
+    <div>
+      <div class="tb-logo-name">Aaisun</div>
+      <div class="tb-logo-sub">Inventory Suite v3.0</div>
+    </div>
+  </div>
+  <div class="tb-divider"></div>
+  <div class="tb-title">📊 Inventory Dashboard</div>
+  <div class="tb-spacer"></div>
+  <div class="tb-date" id="tb-date"></div>
+  <a class="tb-back" href="inventory.html">← Back to Inventory</a>
+  <a class="tb-back" href="index.html">🏠 Hub</a>
+</div>
+
+<!-- INDUSTRY TAB BAR -->
+<div class="ind-tab-bar">
+  <div class="ind-tab active ins-active" id="itab-ins" onclick="switchIndustry('ins')">
+    <span class="ind-icon">🛡</span> Insurance
+    <span class="ind-count ins-count">4 cos</span>
+  </div>
+  <div class="ind-tab auto-active" id="itab-auto" onclick="switchIndustry('auto')">
+    <span class="ind-icon">🚗</span> Automotive
+    <span class="ind-count auto-count">4 cos</span>
+  </div>
+  <div class="ind-tab med-active" id="itab-med" onclick="switchIndustry('med')">
+    <span class="ind-icon">🎬</span> Media
+    <span class="ind-count med-count">4 cos</span>
+  </div>
+  <div class="ind-tab-spacer"></div>
+  <div class="ind-summary" id="ind-summary"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+
+  <!-- KPI CARDS -->
+  <div class="kpi-row" id="kpi-row"></div>
+
+  <!-- CHARTS ROW -->
+  <div class="charts-row" id="charts-row"></div>
+
+  <!-- COMPANY TABS + TABLE -->
+  <div class="co-tabs-container">
+    <div class="co-tab-bar" id="co-tab-bar"></div>
+    <div class="co-summary" id="co-summary"></div>
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <input class="search-box" id="search-box" placeholder="Search items, SKU, zone, supplier…" oninput="filterTable(this.value)">
+        <div class="toolbar-right">
+          <span class="toolbar-stat" id="row-count"></span>
+          <button class="btn-xs" onclick="exportCSV()">⬇ Export CSV</button>
+          <button class="btn-xs primary" onclick="window.print()">🖨 Print</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="data-table" id="inv-table">
+          <thead>
+            <tr>
+              <th class="sortable" onclick="sortTable(0)">#<span class="sort-icon">↕</span></th>
+              <th class="sortable" onclick="sortTable(1)">SKU<span class="sort-icon">↕</span></th>
+              <th class="sortable" onclick="sortTable(2)">Item Name<span class="sort-icon">↕</span></th>
+              <th class="sortable" onclick="sortTable(3)">Qty<span class="sort-icon">↕</span></th>
+              <th>Min Qty</th>
+              <th>Stock Level</th>
+              <th>Status</th>
+              <th>Zone</th>
+              <th class="sortable" onclick="sortTable(8)">Unit Cost<span class="sort-icon">↕</span></th>
+              <th class="sortable" onclick="sortTable(9)">Stock Value<span class="sort-icon">↕</span></th>
+              <th>Supplier</th>
+              <th>Last Moved</th>
+            </tr>
+          </thead>
+          <tbody id="inv-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <span id="page-info">Showing 1–25 of 50 items</span>
+        <div class="page-btns" id="page-btns"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Aaisun Inventory Suite v3.0 &nbsp;·&nbsp; Inventory Dashboard &nbsp;·&nbsp; © 2026 Aaisun</footer>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const INS_ITEMS = [
+  "Policy Folders","Claim Forms","Identity Cards","Product Brochures","Office Stationery",
+  "Filing Kits","Promo Banners","Padded Envelopes","Signature Pads","Stamp Kits",
+  "Welcome Packs","Renewal Kits","Agent Bags","Document Sleeves","Compliance Binders",
+  "Policy Binders","Certificate Packs","Legal Forms","Seals & Stamps","Letterheads",
+  "Correction Fluid","Bond Papers","Archival Boxes","Franking Rolls","Receipt Books",
+  "Claim Envelopes","ID Lanyards","Badge Holders","Secure Pouches","Notary Stamps",
+  "Electronic Signature Devices","Policy Audit Kits","Training Manuals","Safety Helmets","First Aid Kits",
+  "Desk Organizers","Whiteboard Markers","Presentation Folders","Conference Notebooks","USB Drive Packs",
+  "Shredder Bags","Document Trolleys","Index Card Sets","Rubber Band Boxes","Paper Clips Boxes",
+  "Stapler Kits","Report Covers","Lamination Pouches","Toner Cartridges","Thermal Paper Rolls"
+];
+const AUTO_ITEMS = [
+  "Engine Block Sets","Brake Assemblies","Transmission Kits","Head Gaskets","M12 Bolt Packs",
+  "Oil Filter Units","Wiring Harnesses","Exhaust Manifolds","Piston Rings","Timing Chains",
+  "Valve Springs","Camshaft Sets","Cooling Radiators","Turbocharger Kits","Fuel Injectors",
+  "Suspension Arms","Wheel Bearings","CV Joints","Clutch Plates","Alternators",
+  "O2 Sensors","ABS Modules","Power Steering Pumps","Strut Assemblies","Tie Rod Ends",
+  "Starter Motors","Ignition Coils","Drive Shafts","Air Filters","Spark Plugs",
+  "Brake Pads","Shock Absorbers","Coolant Hoses","Serpentine Belts","Battery Terminals",
+  "AC Compressors","Windshield Wipers","Headlight Assemblies","Tail Light Units","Door Handle Sets",
+  "Mirror Assemblies","Seat Belt Kits","Airbag Modules","Hood Release Cables","Cabin Air Filters",
+  "Transmission Fluid Packs","Differential Gear Sets","Body Panel Kits","Exhaust Silencers","Throttle Bodies"
+];
+const MED_ITEMS = [
+  "4K Camera Bodies","LED Lighting Rigs","XLR Cable Sets","256GB Memory Cards","Props Storage Boxes",
+  "Editing SSDs","Chroma Key Screens","Studio Microphones","Reflector Panels","Tripod Sets",
+  "Drone Units","Monitor Arms","USB-C Hubs","Hard Drive Arrays","Colour Gel Packs",
+  "Trade Book Stock","Magazine Bundles","Printing Reels","Thermal Binding Kits","Magenta Ink Cartridges",
+  "Shrink Wrap Film","Proof Copy Sets","Archive Boxes","Cover Laminate Rolls","Spine Tape Packs",
+  "ISBN Sticker Rolls","Distribution Crates","Cardboard Inners","Tissue Interleaves","CD Sleeves",
+  "Podcast Mixers","Lavalier Microphones","Boom Arm Sets","Audio Interface Units","Pop Filter Packs",
+  "Studio Monitor Speakers","Camera Stabilizers","Lens Filter Sets","ND Filter Kits","Wireless Transmitters",
+  "Teleprompter Units","Video Switchers","Streaming Encoders","Green Screen Stands","Sound Dampening Foam",
+  "Cable Management Kits","Broadcast Headphones","Field Recorder Units","Video Projector Lamps","Colour Grading Monitors"
+];
+
+const QTY_BASE  =[245,68,312,18,0,88,142,3,200,55,170,95,30,410,76,122,8,290,44,160,210,36,0,185,73,400,28,155,90,320,15,265,110,48,195,340,22,135,60,280,7,175,92,0,230,145,38,100,255,82];
+const MIN_BASE  =[50,20,100,50,30,25,40,10,60,15,50,30,10,80,20,40,10,80,20,50,60,15,30,40,25,90,10,50,30,70,10,60,35,15,55,80,10,40,20,75,5,45,25,30,60,40,15,30,65,20];
+const COST_BASE =[120,450,800,35,1200,75,380,90,220,160,310,185,50,950,42,275,18,680,140,320,88,510,240,165,72,1100,55,420,195,740,28,580,310,125,460,890,38,750,200,1350,95,600,280,45,370,1200,62,490,220,175];
+const STATUSES  =["In Stock","In Stock","In Stock","In Stock","Low Stock","Out of Stock","Reserved","In Transit","In Stock","In Stock"];
+const MOVED     =["Today","Yesterday","2d ago","Today","3d ago","Today","Yesterday","4d ago","Today","1d ago","5d ago","Today","2d ago","Yesterday","Today","3d ago","Today","Yesterday","2d ago","Today","Today","1d ago","4d ago","Today","Yesterday"];
+const ZONES     =["Zone A-01","Zone A-02","Zone B-01","Zone B-02","Zone C-01","Zone C-02","Zone D-01","Zone D-02","Zone E-01","Zone E-02"];
+const SUPPLIERS =["Bharat Supply Co.","Delhi Office Depot","Southern Stationery","Kolkata Parts Hub","Pune Industrial Ltd.","Hyderabad Tech Supplies","Ahmedabad Mfg. Works","Bengaluru Tech Parts"];
+
+// Company multipliers so each company has slightly different data
+const CO_MULT = {ins1:1.0,ins2:0.88,ins3:1.12,ins4:0.95,auto1:1.0,auto2:1.05,auto3:0.90,auto4:1.08,med1:1.0,med2:0.92,med3:1.10,med4:0.97};
+
+const COMPANIES = {
+  ins1:{id:"ins1",name:"Aaisun Shield Insurance",    short:"ASI",industry:"Insurance",ind:"ins",color:"#1F7DB7",light:"#D6EAF6",cls:"ins",items:INS_ITEMS},
+  ins2:{id:"ins2",name:"Aaisun Protect Group",       short:"APG",industry:"Insurance",ind:"ins",color:"#1F7DB7",light:"#D6EAF6",cls:"ins",items:INS_ITEMS},
+  ins3:{id:"ins3",name:"Aaisun Risk Advisors",       short:"ARA",industry:"Insurance",ind:"ins",color:"#1F7DB7",light:"#D6EAF6",cls:"ins",items:INS_ITEMS},
+  ins4:{id:"ins4",name:"Aaisun Premier Life",        short:"APL",industry:"Insurance",ind:"ins",color:"#1F7DB7",light:"#D6EAF6",cls:"ins",items:INS_ITEMS},
+  auto1:{id:"auto1",name:"Aaisun MotorWorks",        short:"AMW",industry:"Automotive",ind:"auto",color:"#A26200",light:"#F5E8D0",cls:"auto",items:AUTO_ITEMS},
+  auto2:{id:"auto2",name:"Aaisun AutoParts Co.",     short:"AAP",industry:"Automotive",ind:"auto",color:"#A26200",light:"#F5E8D0",cls:"auto",items:AUTO_ITEMS},
+  auto3:{id:"auto3",name:"Aaisun Drive Systems",     short:"ADS",industry:"Automotive",ind:"auto",color:"#A26200",light:"#F5E8D0",cls:"auto",items:AUTO_ITEMS},
+  auto4:{id:"auto4",name:"Aaisun Fleet Solutions",   short:"AFS",industry:"Automotive",ind:"auto",color:"#A26200",light:"#F5E8D0",cls:"auto",items:AUTO_ITEMS},
+  med1:{id:"med1",name:"Aaisun Media Studios",       short:"AMS",industry:"Media",ind:"med",color:"#5A3EA0",light:"#E8E2F8",cls:"med",items:MED_ITEMS},
+  med2:{id:"med2",name:"Aaisun Publishing House",    short:"APH",industry:"Media",ind:"med",color:"#5A3EA0",light:"#E8E2F8",cls:"med",items:MED_ITEMS},
+  med3:{id:"med3",name:"Aaisun Broadcast Corp.",     short:"ABC",industry:"Media",ind:"med",color:"#5A3EA0",light:"#E8E2F8",cls:"med",items:MED_ITEMS},
+  med4:{id:"med4",name:"Aaisun Digital Labs",        short:"ADL",industry:"Media",ind:"med",color:"#5A3EA0",light:"#E8E2F8",cls:"med",items:MED_ITEMS},
+};
+
+const IND_COLORS = {ins:"#1F7DB7",auto:"#A26200",med:"#5A3EA0"};
+const IND_NAMES  = {ins:"Insurance",auto:"Automotive",med:"Media"};
+
+function getInv(coId){
+  const co=COMPANIES[coId],m=CO_MULT[coId]||1;
+  return co.items.map((item,i)=>{
+    const qty=Math.round(QTY_BASE[i]*m);
+    const min=MIN_BASE[i];
+    const cost=COST_BASE[i];
+    let status;
+    if(qty===0) status="Out of Stock";
+    else if(qty<min) status="Low Stock";
+    else status=STATUSES[i%STATUSES.length]==="Out of Stock"||STATUSES[i%STATUSES.length]==="Low Stock"?"In Stock":STATUSES[i%STATUSES.length];
+    return{
+      sku:"SKU-"+co.short+"-"+String(100+i),
+      name:item,qty,min_qty:min,
+      zone:ZONES[i%ZONES.length],
+      supplier:SUPPLIERS[i%SUPPLIERS.length],
+      status,
+      lastMoved:MOVED[i%MOVED.length],
+      cost,value:qty*cost
+    };
+  });
+}
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentInd="ins",currentCo="ins1";
+let allRows=[],filteredRows=[],currentPage=1;
+const PAGE_SIZE=20;
+let sortCol=-1,sortDir=1;
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded",()=>{
+  document.getElementById("tb-date").textContent=new Date().toLocaleDateString("en-IN",{weekday:"short",year:"numeric",month:"short",day:"numeric"});
+  renderAll();
+});
+
+function renderAll(){
+  renderIndSummary();
+  renderKPIs();
+  renderCharts();
+  renderCoTabs();
+  renderTable();
+}
+
+// ─── INDUSTRY SWITCH ─────────────────────────────────────────────────────────
+function switchIndustry(ind){
+  currentInd=ind;
+  currentCo=ind+"1";
+  // Update ind tabs
+  ["ins","auto","med"].forEach(i=>{
+    const el=document.getElementById("itab-"+i);
+    el.className="ind-tab "+(i===ind?"active ":"")+i+"-active";
+  });
+  renderAll();
+}
+
+// ─── COMPANY TAB SWITCH ───────────────────────────────────────────────────────
+function switchCo(coId){
+  currentCo=coId;
+  document.querySelectorAll(".co-tab").forEach(t=>{
+    const active=t.dataset.co===coId;
+    t.className="co-tab"+(active?" active "+currentInd+"-tab":"");
+  });
+  renderCoSummary();
+  loadTableData();
+  renderCharts();
+  renderKPIs();
+}
+
+// ─── INDUSTRY SUMMARY ────────────────────────────────────────────────────────
+function renderIndSummary(){
+  const cos=Object.values(COMPANIES).filter(c=>c.ind===currentInd);
+  let totalItems=0,totalValue=0,lowCount=0,outCount=0;
+  cos.forEach(co=>{
+    const inv=getInv(co.id);
+    inv.forEach(r=>{totalItems++;totalValue+=r.value;if(r.status==="Low Stock")lowCount++;if(r.status==="Out of Stock")outCount++;});
+  });
+  document.getElementById("ind-summary").innerHTML=`
+    <div class="ind-sum-item"><strong>${cos.length}</strong> Companies</div>
+    <div class="ind-sum-item"><strong>${totalItems}</strong> SKUs</div>
+    <div class="ind-sum-item"><strong>₹${(totalValue/1e6).toFixed(1)}M</strong> Total Value</div>
+    <div class="ind-sum-item"><strong style="color:var(--amber)">${lowCount}</strong> Low Stock</div>
+    <div class="ind-sum-item"><strong style="color:var(--red)">${outCount}</strong> Out of Stock</div>
+  `;
+}
+
+// ─── KPI CARDS ───────────────────────────────────────────────────────────────
+function renderKPIs(){
+  const inv=getInv(currentCo);
+  const co=COMPANIES[currentCo];
+  const totalItems=inv.length;
+  const totalValue=inv.reduce((s,r)=>s+r.value,0);
+  const totalQty=inv.reduce((s,r)=>s+r.qty,0);
+  const inStock=inv.filter(r=>r.status==="In Stock").length;
+  const lowStock=inv.filter(r=>r.status==="Low Stock").length;
+  const outStock=inv.filter(r=>r.status==="Out of Stock").length;
+  const reserved=inv.filter(r=>r.status==="Reserved").length;
+  const inTransit=inv.filter(r=>r.status==="In Transit").length;
+  const healthPct=Math.round((inStock/totalItems)*100);
+  const color=IND_COLORS[currentInd];
+
+  document.getElementById("kpi-row").innerHTML=`
+    <div class="kpi-card">
+      <div class="kpi-label">Total SKUs</div>
+      <div class="kpi-val">${totalItems}</div>
+      <div class="kpi-sub">${co.short} · ${co.industry}</div>
+      <div class="kpi-bar"><div class="kpi-fill" style="width:100%;background:${color}"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Stock Value</div>
+      <div class="kpi-val">₹${(totalValue/1e5).toFixed(1)}<span style="font-size:14px;font-weight:400;color:var(--on-surface-3)">L</span></div>
+      <div class="kpi-sub">${totalQty.toLocaleString("en-IN")} units on hand</div>
+      <div class="kpi-bar"><div class="kpi-fill" style="width:78%;background:${color}"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Stock Health</div>
+      <div class="kpi-val">${healthPct}%<span class="kpi-badge kpi-up">↑ Good</span></div>
+      <div class="kpi-sub">${inStock} in stock of ${totalItems}</div>
+      <div class="kpi-bar"><div class="kpi-fill" style="width:${healthPct}%;background:var(--green)"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Alerts</div>
+      <div class="kpi-val" style="color:var(--amber)">${lowStock+outStock}</div>
+      <div class="kpi-sub"><span style="color:var(--amber)">${lowStock} low</span> · <span style="color:var(--red)">${outStock} out</span></div>
+      <div class="kpi-bar"><div class="kpi-fill" style="width:${Math.round(((lowStock+outStock)/totalItems)*100)}%;background:var(--red)"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">In Transit / Reserved</div>
+      <div class="kpi-val">${inTransit+reserved}</div>
+      <div class="kpi-sub">${inTransit} in transit · ${reserved} reserved</div>
+      <div class="kpi-bar"><div class="kpi-fill" style="width:${Math.round(((inTransit+reserved)/totalItems)*100)}%;background:${color}"></div></div>
+    </div>
+  `;
+}
+
+// ─── CHARTS ──────────────────────────────────────────────────────────────────
+function renderCharts(){
+  const inv=getInv(currentCo);
+  const color=IND_COLORS[currentInd];
+
+  // Top 5 by value
+  const byValue=[...inv].sort((a,b)=>b.value-a.value).slice(0,6);
+  const maxVal=byValue[0].value;
+  const barRows=byValue.map(r=>`
+    <div class="bar-row">
+      <div class="bar-label" title="${r.name}">${r.name}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round((r.value/maxVal)*100)}%;background:${color}"></div></div>
+      <div class="bar-val">₹${(r.value/1000).toFixed(0)}K</div>
+    </div>
+  `).join("");
+
+  // Status donut data
+  const statusMap={};
+  inv.forEach(r=>{statusMap[r.status]=(statusMap[r.status]||0)+1});
+  const statusColors={"In Stock":"#0A6B3E","Low Stock":"#A26200","Out of Stock":"#B02A2A","Reserved":"#1F7DB7","In Transit":"#0A5C46"};
+  const total=inv.length;
+  const donutItems=Object.entries(statusMap).map(([s,c])=>({label:s,count:c,pct:Math.round((c/total)*100),color:statusColors[s]||"#74777C"}));
+
+  // SVG donut
+  let offset=0;const r=40,cx=50,cy=50,circ=2*Math.PI*r;
+  const sectors=donutItems.map(d=>{
+    const len=(d.pct/100)*circ;
+    const sector=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.color}" stroke-width="16"
+      stroke-dasharray="${len} ${circ-len}" stroke-dashoffset="${-offset}" style="transition:all .4s"/>`;
+    offset+=len;return sector;
+  });
+  const donutSvg=`<svg class="donut-svg" width="100" height="100" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="40" fill="none" stroke="var(--surface-container)" stroke-width="16"/>
+    ${sectors.join("")}
+    <text x="50" y="46" text-anchor="middle" font-size="12" font-weight="700" fill="var(--on-surface)" font-family="Inter,sans-serif">${total}</text>
+    <text x="50" y="58" text-anchor="middle" font-size="8" fill="var(--on-surface-3)" font-family="Inter,sans-serif">SKUs</text>
+  </svg>`;
+  const donutLegend=donutItems.map(d=>`
+    <div class="donut-item">
+      <div class="donut-dot" style="background:${d.color}"></div>
+      ${d.label}
+      <span class="donut-pct">${d.pct}%</span>
+    </div>
+  `).join("");
+
+  // Zone distribution
+  const zoneMap={};
+  inv.forEach(r=>{zoneMap[r.zone]=(zoneMap[r.zone]||0)+r.qty});
+  const zoneEntries=Object.entries(zoneMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const maxZone=zoneEntries[0]?.[1]||1;
+  const zoneRows=zoneEntries.map(([z,q])=>`
+    <div class="bar-row">
+      <div class="bar-label">${z}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round((q/maxZone)*100)}%;background:${color}aa"></div></div>
+      <div class="bar-val">${q.toLocaleString("en-IN")}</div>
+    </div>
+  `).join("");
+
+  document.getElementById("charts-row").innerHTML=`
+    <div class="chart-card">
+      <div class="chart-title">Top Items by Stock Value</div>
+      <div class="bar-chart">${barRows}</div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Inventory Status Breakdown</div>
+      <div class="donut-wrap">
+        ${donutSvg}
+        <div class="donut-legend">${donutLegend}</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Units by Warehouse Zone</div>
+      <div class="bar-chart">${zoneRows}</div>
+    </div>
+  `;
+}
+
+// ─── COMPANY TABS ────────────────────────────────────────────────────────────
+function renderCoTabs(){
+  const cos=Object.values(COMPANIES).filter(c=>c.ind===currentInd);
+  const color=IND_COLORS[currentInd];
+  document.getElementById("co-tab-bar").innerHTML=cos.map(co=>{
+    const active=co.id===currentCo;
+    return`<div class="co-tab${active?" active "+currentInd+"-tab":""}" data-co="${co.id}" onclick="switchCo('${co.id}')">
+      <div class="co-dot" style="background:${active?color:"var(--surface-high)"}"></div>
+      ${co.name}
+      <span class="co-tab-short">${co.short}</span>
+    </div>`;
+  }).join("");
+  renderCoSummary();
+  loadTableData();
+}
+
+function renderCoSummary(){
+  const inv=getInv(currentCo);
+  const co=COMPANIES[currentCo];
+  const totalValue=inv.reduce((s,r)=>s+r.value,0);
+  const totalQty=inv.reduce((s,r)=>s+r.qty,0);
+  const low=inv.filter(r=>r.status==="Low Stock").length;
+  const out=inv.filter(r=>r.status==="Out of Stock").length;
+  const zones=new Set(inv.map(r=>r.zone)).size;
+  const suppliers=new Set(inv.map(r=>r.supplier)).size;
+  document.getElementById("co-summary").innerHTML=`
+    <div class="co-sum-item"><strong>${co.name}</strong>&nbsp;·&nbsp;${co.short}</div>
+    <div class="co-sum-item"><strong>${inv.length}</strong> SKUs</div>
+    <div class="co-sum-item"><strong>${totalQty.toLocaleString("en-IN")}</strong> Total Units</div>
+    <div class="co-sum-item"><strong>₹${(totalValue/1e5).toFixed(2)}L</strong> Stock Value</div>
+    <div class="co-sum-item"><strong style="color:var(--amber)">${low}</strong> Low Stock</div>
+    <div class="co-sum-item"><strong style="color:var(--red)">${out}</strong> Out of Stock</div>
+    <div class="co-sum-item"><strong>${zones}</strong> Zones</div>
+    <div class="co-sum-item"><strong>${suppliers}</strong> Suppliers</div>
+  `;
+}
+
+// ─── TABLE ───────────────────────────────────────────────────────────────────
+const TAG_MAP={"In Stock":"tag-green","Low Stock":"tag-amber","Out of Stock":"tag-red","Reserved":"tag-blue","In Transit":"tag-teal"};
+function tag(s){return`<span class="tag ${TAG_MAP[s]||"tag-gray"}">${s}</span>`}
+function ₹(n){return"₹"+Number(n).toLocaleString("en-IN")}
+
+function loadTableData(){
+  allRows=getInv(currentCo);
+  filteredRows=[...allRows];
+  currentPage=1;
+  sortCol=-1;sortDir=1;
+  document.querySelectorAll(".data-table th").forEach(th=>th.classList.remove("sorted"));
+  renderTablePage();
+}
+
+function filterTable(q){
+  const lq=q.toLowerCase();
+  filteredRows=allRows.filter(r=>
+    r.name.toLowerCase().includes(lq)||
+    r.sku.toLowerCase().includes(lq)||
+    r.zone.toLowerCase().includes(lq)||
+    r.supplier.toLowerCase().includes(lq)||
+    r.status.toLowerCase().includes(lq)
+  );
+  currentPage=1;
+  renderTablePage();
+}
+
+function sortTable(col){
+  if(sortCol===col) sortDir*=-1; else{sortCol=col;sortDir=1;}
+  const keys=["_idx","sku","name","qty","min_qty","_bar","status","zone","cost","value","supplier","lastMoved"];
+  const key=keys[col];
+  filteredRows.sort((a,b)=>{
+    let av=a[key]??0,bv=b[key]??0;
+    if(typeof av==="string") return sortDir*av.localeCompare(bv);
+    return sortDir*(av-bv);
+  });
+  document.querySelectorAll(".data-table th").forEach((th,i)=>{
+    th.classList.toggle("sorted",i===col);
+    const icon=th.querySelector(".sort-icon");
+    if(icon) icon.textContent=i===col?(sortDir===1?"↑":"↓"):"↕";
+  });
+  renderTablePage();
+}
+
+function renderTablePage(){
+  const start=(currentPage-1)*PAGE_SIZE;
+  const end=Math.min(start+PAGE_SIZE,filteredRows.length);
+  const page=filteredRows.slice(start,end);
+
+  document.getElementById("row-count").innerHTML=`<strong>${filteredRows.length}</strong> of ${allRows.length} items`;
+  document.getElementById("page-info").textContent=`Showing ${start+1}–${end} of ${filteredRows.length} items`;
+
+  // Pagination buttons
+  const totalPages=Math.ceil(filteredRows.length/PAGE_SIZE);
+  let pBtns="";
+  for(let p=1;p<=totalPages;p++){
+    pBtns+=`<button class="page-btn${p===currentPage?" active":""}" onclick="goPage(${p})">${p}</button>`;
+  }
+  document.getElementById("page-btns").innerHTML=pBtns;
+
+  // Table rows
+  const color=IND_COLORS[currentInd];
+  document.getElementById("inv-tbody").innerHTML=page.map((r,idx)=>{
+    const globalIdx=start+idx+1;
+    const pct=r.min_qty>0?Math.min(100,Math.round((r.qty/r.min_qty)*100)):100;
+    const fillColor=r.qty===0?"var(--red)":r.qty<r.min_qty?"var(--amber)":"var(--green)";
+    const qtyClass=r.qty===0?"qty-zero":r.qty<r.min_qty?"qty-low":"qty-ok";
+    return`<tr>
+      <td style="color:var(--on-surface-4);font-size:11px">${globalIdx}</td>
+      <td><span class="td-sku">${r.sku}</span></td>
+      <td class="bold">${r.name}</td>
+      <td><span class="td-qty ${qtyClass}">${r.qty.toLocaleString("en-IN")}</span></td>
+      <td style="color:var(--on-surface-3)">${r.min_qty}</td>
+      <td>
+        <div class="stock-bar">
+          <div class="mini-bar"><div class="mini-fill" style="width:${Math.min(pct,100)}%;background:${fillColor}"></div></div>
+          <span style="font-size:10px;color:var(--on-surface-3)">${pct>100?"OK":pct+"%"}</span>
+        </div>
+      </td>
+      <td>${tag(r.status)}</td>
+      <td><span class="zone-chip">${r.zone}</span></td>
+      <td class="td-money">${₹(r.cost)}</td>
+      <td class="td-money">${₹(r.value)}</td>
+      <td style="color:var(--on-surface-2)">${r.supplier}</td>
+      <td style="color:var(--on-surface-3)">${r.lastMoved}</td>
+    </tr>`;
+  }).join("");
+}
+
+function goPage(p){
+  currentPage=p;
+  renderTablePage();
+  document.querySelector(".co-tabs-container").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+// ─── EXPORT CSV ───────────────────────────────────────────────────────────────
+function exportCSV(){
+  const co=COMPANIES[currentCo];
+  const headers=["#","SKU","Item Name","Qty","Min Qty","Status","Zone","Unit Cost","Stock Value","Supplier","Last Moved"];
+  const rows=filteredRows.map((r,i)=>[i+1,r.sku,`"${r.name}"`,r.qty,r.min_qty,r.status,r.zone,r.cost,r.value,`"${r.supplier}"`,r.lastMoved]);
+  const csv=[headers.join(","),...rows.map(r=>r.join(","))].join("\n");
+  const blob=new Blob([csv],{type:"text/csv"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`Aaisun_Inventory_${co.short}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+</script>
+</body>
+</html>
