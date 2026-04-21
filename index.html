@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AAISUN — AI that Powers Intelligent Enterprises</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --sapphire: #c7e7f2;
+    --gold: #F5A623;
+    --midnight:#c7e7f2;
+    --navy: #c7e7f2;
+    --cyan: #c7e7f2;
+    --slate: #c7e7f2;
+    --cloud: #c7e7f2;
+    --gold-light: #FFB84D;
+    --blue-mid: #c7e7f2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(midnight);
+    color: #58d0d6;
+    overflow-x: hidden;
+  }
+
+  /* ===== CANVAS BG ===== */
+  #hero-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(6, 14, 34, 0.85);
+    border-bottom: 1px solid rgba(245, 166, 35, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 42px;
+    height: 42px;
+    position: relative;
+  }
+
+  .logo-text {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .logo-text span:first-child { color: #ffffff; }
+  .logo-text .accent { color: var(--gold); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #94a3b8;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover { color: #fff; }
+  .nav-links a:hover::after { width: 100%; }
+
+  .btn-demo {
+    background: var(--gold);
+    color: var(--midnight);
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-demo:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(245, 166, 35, 0.35);
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 70% 40%, rgba(11, 42, 107, 0.5) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(20, 68, 168, 0.3) 0%, transparent 50%),
+                var(--midnight);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(11, 42, 107, 0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11, 42, 107, 0.15) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+
+  .hero-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 8rem 2rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(245, 166, 35, 0.1);
+    border: 1px solid rgba(245, 166, 35, 0.3);
+    border-radius: 50px;
+    padding: 0.4rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeSlideUp 0.8s ease both;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  .hero-headline {
+    font-family: 'Exo 2', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    animation: fadeSlideUp 0.8s ease 0.1s both;
+  }
+
+  .hero-headline .line-gold { color: var(--gold); }
+  .hero-headline .line-white { color: #ffffff; }
+  .hero-headline .line-blue { 
+    background: linear-gradient(90deg, #60a5fa, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    max-width: 520px;
+    animation: fadeSlideUp 0.8s ease 0.2s both;
+    font-weight: 300;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeSlideUp 0.8s ease 0.3s both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--gold);
+    color: var(--midnight);
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(245, 166, 35, 0.4);
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: #ffffff;
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.25);
+    transition: all 0.25s ease;
+  }
+
+  .btn-outline:hover {
+    border-color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    animation: fadeSlideUp 0.8s ease 0.4s both;
+  }
+
+  .stat-item { text-align: left; }
+  .stat-num {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ===== HERO VISUAL ===== */
+  .hero-visual {
+    position: relative;
+    animation: fadeSlideUp 1s ease 0.5s both;
+  }
+
+  .dashboard-card {
+    background: rgba(13, 27, 62, 0.8);
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .card-header {
+    display: center;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .status-live {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    color: #22c55e;
+    font-weight: 600;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .metric-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .metric-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .metric-val.gold { color: var(--gold); }
+  .metric-val.cyan { color: var(--cyan); }
+  .metric-val.green { color: #22c55e; }
+
+  .metric-name {
+    font-size: 0.65rem;
+    color: #475569;
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .mini-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 60px;
+    margin-bottom: 1rem;
+  }
+
+  .bar {
+    flex: 1;
+    background: rgba(245, 166, 35, 0.2);
+    border-radius: 3px 3px 0 0;
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bar::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(245,166,35,0.3) 0%, transparent 100%);
+  }
+
+  .bar.active { background: linear-gradient(180deg, var(--gold) 0%, rgba(245,166,35,0.5) 100%); }
+
+  .floating-alert {
+    position: absolute;
+    top: 1.5rem;
+    right: -1.5rem;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    color: #22c55e;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    animation: float 3s ease-in-out infinite;
+    white-space: nowrap;
+  }
+
+  .floating-tag {
+    position: absolute;
+    bottom: 1rem;
+    left: 1.5rem;
+    background: rgba(11, 42, 107, 0.9);
+    border: 1px solid rgba(100, 149, 237, 0.3);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.7rem;
+    color: #93c5fd;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    animation: float 3s ease-in-out 1.5s infinite;
+    white-space: nowrap;
+  }
+.flex-container {
+position: flex;
+  display: left;
+    align-items: center;
+  justify-content: left; /* Horizontal centering */
+  align-items: left;     /* Vertical centering */
+  height: 100vh;           /* Full viewport height for vertical centering */
+}
+.flex-container2 {
+position: flex;
+  display: right;
+    align-items: right;
+  justify-content: right; /* Horizontal centering */
+  align-items: right;     /* Vertical centering */
+  height: 100vh;           /* Full viewport height for vertical centering */
+}
+
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== SECTIONS ===== */
+  section { position: relative; }
+
+  .section-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+
+  .section-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Exo 2', sans-serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    font-size: 1.05rem;
+    color: #64748b;
+    max-width: 600px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ===== LOGOS / TRUST ===== */
+  .trust-bar {
+    background: rgba(13, 27, 62, 0.4);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 2.5rem 0;
+  }
+
+  .trust-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    overflow: hidden;
+  }
+
+  .trust-label {
+    font-size: 0.7rem;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .logos-row {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .logo-pill {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 0.6rem 1.4rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: all 0.3s;
+  }
+
+  .logo-pill:hover {
+    border-color: rgba(245, 166, 35, 0.3);
+    color: #94a3b8;
+  }
+
+  /* ===== INDUSTRIES ===== */
+  .industries-bg {
+    background: rgba(6, 14, 34, 0.9);
+  }
+
+  .industries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .industry-card {
+    background: rgba(13, 27, 62, 0.5);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 2rem 1.5rem;
+    transition: all 0.35s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .industry-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--cyan));
+    transform: scaleX(0);
+    transition: transform 0.35s ease;
+    transform-origin: left;
+  }
+
+  .industry-card:hover { 
+    border-color: rgba(245, 166, 35, 0.25);
+    background: rgba(13, 27, 62, 0.8);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+
+  .industry-card:hover::before { transform: scaleX(1); }
+
+  .industry-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .industry-name {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .industry-desc {
+    font-size: 0.85rem;
+    color: #475569;
+    line-height: 1.6;
+  }
+
+  /* ===== SOLUTIONS ===== */
+  .solutions-bg {
+    background: radial-gradient(ellipse at 50% 0%, rgba(11, 42, 107, 0.2) 0%, transparent 60%), var(--midnight);
+  }
+
+  .solutions-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 0;
+  }
+
+  .tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    color: #475569;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    letter-spacing: 0.03em;
+  }
+
+  .tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  .tab-btn.active { color: var(--gold); }
+  .tab-btn.active::after { transform: scaleX(1); }
+  .tab-btn:hover { color: #94a3b8; }
+
+  .solutions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .solution-card {
+    background: rgba(13, 27, 62, 0.4);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 2rem;
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .solution-card:hover {
+    border-color: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.05);
+    transform: translateY(-3px);
+  }
+
+  .sol-icon-wrap {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, rgba(245,166,35,0.15), rgba(0,212,255,0.1));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(245,166,35,0.15);
+  }
+
+  .sol-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .sol-desc {
+    font-size: 0.85rem;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .sol-link {
+    font-size: 0.8rem;
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: gap 0.2s;
+  }
+
+  .sol-link:hover { gap: 0.6rem; }
+
+  /* ===== METRICS / WHY AAISUN ===== */
+  .why-section {
+    background: linear-gradient(135deg, rgba(11, 42, 107, 0.3) 0%, rgba(6, 14, 34, 0.9) 100%);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+
+  .why-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .why-feature {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.25rem;
+    border-radius: 12px;
+    transition: background 0.25s;
+  }
+
+  .why-feature:hover {
+    background: rgba(255,255,255,0.03);
+  }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.2);
+  }
+
+  .feature-title {
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+  }
+
+  .feature-desc {
+    font-size: 0.85rem;
+    color: #475569;
+    line-height: 1.6;
+  }
+
+  .metrics-showcase {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .metric-card {
+    background: rgba(13, 27, 62, 0.6);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 1.75rem;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .metric-card:hover {
+    border-color: rgba(245,166,35,0.2);
+    transform: scale(1.02);
+  }
+
+  .metric-card.span2 { grid-column: span 2; }
+
+  .metric-card-val {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .metric-card-label {
+    font-size: 0.8rem;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials-bg { background: rgba(6, 14, 34, 0.95); }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .testimonial-card {
+    background: rgba(13, 27, 62, 0.5);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: all 0.35s;
+  }
+
+  .testimonial-card:hover {
+    border-color: rgba(245, 166, 35, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+
+  .stars {
+    color: var(--gold);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .testimonial-text {
+    font-size: 0.92rem;
+    color: #94a3b8;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sapphire), var(--gold));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: white;
+  }
+
+  .author-name {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #fff;
+  }
+
+  .author-role {
+    font-size: 0.75rem;
+    color: #475569;
+    margin-top: 0.1rem;
+  }
+
+  /* ===== CTA SECTION ===== */
+  .cta-section {
+    background: linear-gradient(135deg, rgba(11, 42, 107, 0.6) 0%, rgba(20, 68, 168, 0.4) 50%, rgba(6, 14, 34, 0.9) 100%);
+    border-top: 1px solid rgba(245,166,35,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 7rem 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-title {
+    font-family: 'Exo 2', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .cta-sub {
+    font-size: 1.05rem;
+    color: #64748b;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+
+  .cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: rgba(3, 7, 18, 0.98);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 4rem 0 2rem;
+  }
+
+  .footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-brand-desc {
+    font-size: 0.875rem;
+    color:#f2f6f7;
+    line-height: 1.7;
+    margin-top: 1rem;
+    max-width: 280px;
+  }
+
+  .footer-col-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #f2f6f7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.25rem;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .footer-links a {
+    font-size: 0.875rem;
+    color: #f2f6f7;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: #94a3b8; }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: #1e293b;
+  }
+
+  .footer-legal {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-legal a {
+    font-size: 0.8rem;
+    color: #1e293b;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-legal a:hover { color: #475569; }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--midnight); }
+  ::-webkit-scrollbar-thumb { background: rgba(245,166,35,0.3); border-radius: 3px; }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .why-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .nav-links { display: none; }
+    .trust-inner { flex-direction: column; gap: 1.5rem; }
+  }
+
+  /* Animate on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <svg width="22" height="22" viewBox="0 0 42 42" fill="none">
+        <img src="Aaisun.jpg" width="59" height ="64">
+      </svg>
+      <span class="logo-text">Aaisun</span></span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#solutions">Solutions</a></li>
+      <li><a href="#industries">Industries</a></li>
+      <li><a href="#why">Why AAISUN</a></li>
+      <li><a href="#insights">Insights</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+
+    <a href="#demo" class="btn-demo">Book a Demo</a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="badge-dot"></div>
+        AI Solutions 2025
+      </div>
+      <h1 class="hero-headline">
+        <span class="line-gold">Intelligent AI.</span><br/>
+        <span class="line-white">Unstoppable</span><br/>
+        <span class="line-gold">Operations.</span>
+      </h1>
+      <p class="hero-sub"><strong style="color:#44484a">
+        To shape the future of industry by creating adaptive, responsible AI system</strong> 
+        <strong style="color:#44484a">Supply Chain</strong> 
+        <strong style="color:#44484a">Automotive</strong>     
+        <strong style="color:#44484a">Pharmaceuticals</strong>and <strong style="color:#44484a">Insurance</strong> —
+        <strong style="color:#44484a">turning complex operational data into decisive, measurable action at scale.</strong>
+      </p>
+      <div class="hero-ctas">
+        <a href="#demo" class="btn-primary">
+          Book a Demo
+<a href="#solutions" class="btn-outline">
+          Explore Solutions</div> </a>
+          
+  
+          </div>
+<div class="flex-container">
+<img src="Research Cells.jpg" width="659" height ="364">
+</div>
+</div>
+
+
+
+        
+      
+    <!-- Dashboard Visual -->
+<div class="floating-alert">
+        <div class="flex-container2">
+<div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num">40%</div>
+          <div class="stat-label">Cost Reduction</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">3×</div>
+          <div class="stat-label">Faster Claims</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">200%</div>
+          <div class="stat-label">Avg. ROI</div>
+        </div>
+     </div>
+</div>
+
+      <div class="floating-alert">✅ Anomaly Detected & Resolved</div>
+</div>
+      <div class="dashboard-card">
+        <div class="card-header">
+          <span class="card-title">AI Operations Dashboard</span>
+          <span class="status-live"><span class="status-dot"></span> Live</span>
+    
+
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <div class="metric-val gold">98.4%</div>
+            <div class="metric-name">Forecast Acc.</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val cyan">₹2.3Cr</div>
+            <div class="metric-name">Savings Today</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val green">+34%</div>
+            <div class="metric-name">Throughput</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:0.5rem;">
+          <span style="font-size:0.7rem;color:#334155;text-transform:uppercase;letter-spacing:0.08em;">Weekly Demand Forecast vs Actual</span>
+        </div>
+        <div class="mini-chart" id="chart">
+          <div class="bar" style="height:45%"></div>
+          <div class="bar" style="height:62%"></div>
+          <div class="bar" style="height:50%"></div>
+          <div class="bar active" style="height:78%"></div>
+          <div class="bar" style="height:55%"></div>
+          <div class="bar active" style="height:90%"></div>
+          <div class="bar" style="height:67%"></div>
+          <div class="bar active" style="height:82%"></div>
+          <div class="bar" style="height:71%"></div>
+          <div class="bar" style="height:58%"></div>
+          <div class="bar active" style="height:95%"></div>
+          <div class="bar" style="height:63%"></div>
+        </div>
+
+        <div style="display:flex;gap:0.75rem;margin-top:1rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:1rem;">
+          <div style="flex:1;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.1);border-radius:8px;padding:0.75rem;text-align:center;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:1rem;color:#00D4FF;font-weight:500;">247</div>
+            <div style="font-size:0.6rem;color:#334155;text-transform:uppercase;margin-top:0.2rem;letter-spacing:0.08em;">Active SKUs</div>
+          </div>
+          <div style="flex:1;background:rgba(245,166,35,0.05);border:1px solid rgba(245,166,35,0.1);border-radius:8px;padding:0.75rem;text-align:center;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:1rem;color:#F5A623;font-weight:500;">12ms</div>
+            <div style="font-size:0.6rem;color:#334155;text-transform:uppercase;margin-top:0.2rem;letter-spacing:0.08em;">Latency</div>
+          </div>
+          <div style="flex:1;background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.1);border-radius:8px;padding:0.75rem;text-align:center;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:1rem;color:#22c55e;font-weight:500;">99.9%</div>
+            <div style="font-size:0.6rem;color:#334155;text-transform:uppercase;margin-top:0.2rem;letter-spacing:0.08em;">Uptime</div>
+          </div>
+        </div>
+      </div>
+      <div class="floating-tag">🔗 Integrated with SAP · Blue Yonder · Salesforce</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRUST BAR ===== -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <span class="trust-label">Trusted by leaders in</span>
+    <div class="logos-row">
+      <div class="logo-pill">Manufacturing</div>
+      <div class="logo-pill">Logistics</div>
+      <div class="logo-pill">Insurance</div>
+      <div class="logo-pill">Retail</div>
+      <div class="logo-pill">Healthcare</div>
+      <div class="logo-pill">FMCG</div>
+      <div class="logo-pill">FinTech</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INDUSTRIES ===== -->
+<section id="industries" class="industries-bg">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-label">Industries We Serve</span>
+      <h2 class="section-title">Domain AI, Built for<br/>Your Industry's Reality</h2>
+      <p class="section-sub">
+        We don't build generic AI. Every solution is engineered around the
+        operational DNA of your sector — constraints, regulations, and all.
+      </p>
+    </div>
+
+    <div class="industries-grid reveal" style="transition-delay:0.1s">
+      <div class="industry-card">
+        <span class="industry-icon">🏭</span>
+        <div class="industry-name">Manufacturing</div>
+        <div class="industry-desc">Predictive maintenance, quality control automation, and production scheduling powered by computer vision and ML.</div>
+      </div>
+      <div class="industry-card">
+        <span class="industry-icon">🚚</span>
+        <div class="industry-name">Logistics</div>
+        <div class="industry-desc">Real-time route optimization, last-mile intelligence, and carrier performance scoring at scale.</div>
+      </div>
+      <div class="industry-card">
+        <span class="industry-icon">🛡️</span>
+        <div class="industry-name">Insurance</div>
+        <div class="industry-desc">Instant claims triage, fraud detection, and AI-driven underwriting that slashes processing time by 3×.</div>
+      </div>
+      <div class="industry-card">
+        <span class="industry-icon">🛒</span>
+        <div class="industry-name">Retail</div>
+        <div class="industry-desc">Hyper-accurate demand forecasting, dynamic pricing, and personalized replenishment strategies.</div>
+      </div>
+      <div class="industry-card">
+        <span class="industry-icon">🏥</span>
+        <div class="industry-name">Healthcare</div>
+        <div class="industry-desc">Medical supply chain resilience, patient flow optimization, and regulatory-compliant AI diagnostics support.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SOLUTIONS ===== -->
+<section id="solutions" class="solutions-bg">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-label">Our Solutions</span>
+      <h2 class="section-title">Applied AI That<br/>Moves the Needle</h2>
+      <p class="section-sub">
+        From predictive intelligence to generative automation — purpose-built modules
+        that deploy fast and deliver measurable outcomes.
+      </p>
+    </div>
+
+    <div class="solutions-tabs reveal" style="margin-top:3rem">
+      <button class="tab-btn active" onclick="setTab(this, 'supply')">Supply Chain AI</button>
+      <button class="tab-btn" onclick="setTab(this, 'insurance')">Insurance AI</button>
+      <button class="tab-btn" onclick="setTab(this, 'crossindustry')">Cross-Industry AI</button>
+    </div>
+
+    <div id="supply" class="solutions-grid tab-content">
+      <div class="solution-card reveal">
+        <div class="sol-icon-wrap">📈</div>
+        <div class="sol-title">Demand Forecasting</div>
+        <div class="sol-desc">ML models trained on your SKU history, market signals, and external factors — delivering 95%+ accuracy across planning horizons.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal" style="transition-delay:0.05s">
+        <div class="sol-icon-wrap">📦</div>
+        <div class="sol-title">Inventory Optimization</div>
+        <div class="sol-desc">Eliminate dead stock and prevent stockouts with dynamic safety stock calculations and reorder point automation.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal" style="transition-delay:0.1s">
+        <div class="sol-icon-wrap">🤖</div>
+        <div class="sol-title">Warehouse Automation</div>
+        <div class="sol-desc">Computer vision–powered QC, pick-path optimization, and autonomous slotting intelligence for modern DCs.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal" style="transition-delay:0.15s">
+        <div class="sol-icon-wrap">🗺️</div>
+        <div class="sol-title">Route Optimization</div>
+        <div class="sol-desc">Real-time, multi-constraint routing that reduces last-mile costs by up to 25% while improving delivery SLAs.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+    </div>
+
+    <div id="insurance" class="solutions-grid tab-content" style="display:none">
+      <div class="solution-card reveal">
+        <div class="sol-icon-wrap">⚡</div>
+        <div class="sol-title">Claims Automation</div>
+        <div class="sol-desc">End-to-end intelligent claims processing — from first notice of loss to settlement — with straight-through processing rates of 70%+.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal" style="transition-delay:0.05s">
+        <div class="sol-icon-wrap">🔍</div>
+        <div class="sol-title">Fraud Detection</div>
+        <div class="sol-desc">Graph neural networks and anomaly detection models that catch complex fraud rings before payout — saving millions per year.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal" style="transition-delay:0.1s">
+        <div class="sol-icon-wrap">📊</div>
+        <div class="sol-title">Risk Scoring</div>
+        <div class="sol-desc">Granular, real-time risk scores for portfolios, policies, and customers — powering smarter underwriting decisions.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal" style="transition-delay:0.15s">
+        <div class="sol-icon-wrap">🧠</div>
+        <div class="sol-title">Underwriting Intelligence</div>
+        <div class="sol-desc">AI-assisted underwriting recommendations that reduce loss ratios by 15–20% while improving binding speed.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+    </div>
+
+    <div id="crossindustry" class="solutions-grid tab-content" style="display:none">
+      <div class="solution-card reveal">
+        <div class="sol-icon-wrap">🔮</div>
+        <div class="sol-title">Predictive Analytics</div>
+        <div class="sol-desc">Universal predictive layer that works across datasets — from customer churn to equipment failure — with explainable outputs.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal" style="transition-delay:0.05s">
+        <div class="sol-icon-wrap">✨</div>
+        <div class="sol-title">Generative AI Solutions</div>
+        <div class="sol-desc">Enterprise-grade GenAI for document processing, report generation, and conversational intelligence — secured for your data.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal" style="transition-delay:0.1s">
+        <div class="sol-icon-wrap">⚙️</div>
+        <div class="sol-title">Process Automation</div>
+        <div class="sol-desc">Intelligent process mining and RPA augmentation that identifies and automates your highest-value operational bottlenecks.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+      <div class="solution-card reveal" style="transition-delay:0.15s">
+        <div class="sol-icon-wrap">👁️</div>
+        <div class="sol-title">Computer Vision</div>
+        <div class="sol-desc">Real-time visual inspection, defect detection, and video analytics that match human accuracy at machine speed.</div>
+        <a href="#" class="sol-link">Learn more →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHY AAISUN ===== -->
+<section id="why" class="why-section">
+  <div class="section-inner">
+    <div class="why-grid">
+      <div>
+        <div class="reveal">
+          <span class="section-label">Why Aaisun</span>
+          <h2 class="section-title">AI Built for<br/>Accountability</h2>
+          <p class="section-sub" style="margin-bottom:2.5rem">
+            Anyone can deploy a model. We engineer AI that executives can trust,
+            finance can validate, and operations can depend on — every single day.
+          </p>
+        </div>
+        <div class="why-features">
+          <div class="why-feature reveal">
+            <div class="feature-icon">🏗️</div>
+            <div>
+              <div class="feature-title">Seamless architecture</div>
+              <div class="feature-desc">Models trained on industry-specific data by veterans with 15+ years in supply chain and insurance operations.</div>
+            </div>
+          </div>
+          <div class="why-feature reveal" style="transition-delay:0.05s">
+            <div class="feature-icon">🔌</div>
+            <div>
+              <div class="feature-title">AI Solutions</div>
+              <div class="feature-desc">Native connectors for SAP, Blue Yonder, Oracle SCM, Salesforce, Guidewire, and 40+ enterprise systems.</div>
+            </div>
+          </div>
+          <div class="why-feature reveal" style="transition-delay:0.1s">
+            <div class="feature-icon">📋</div>
+            <div>
+              <div class="feature-title">Explainable & Auditable</div>
+              <div class="feature-desc">Every prediction comes with a traceable rationale. Our AI passes the CFO test — and the regulator test.</div>
+            </div>
+          </div>
+          <div class="why-feature reveal" style="transition-delay:0.15s">
+            <div class="feature-icon">📈</div>
+            <div>
+              <div class="feature-title">Proven ROI in 90 Days</div>
+              <div class="feature-desc">Our deployment framework is designed to surface measurable value within one quarter — or we work until it does.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metrics-showcase reveal" style="transition-delay:0.2s">
+        <div class="metric-card">
+          <div class="metric-card-val">40%</div>
+          <div class="metric-card-label">Avg. Operational Cost Reduction</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card-val">3×</div>
+          <div class="metric-card-label">Faster Claims Resolution</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card-val">95%+</div>
+          <div class="metric-card-label">Forecast Accuracy Achieved</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card-val">200%</div>
+          <div class="metric-card-label">Average ROI Across Deployments</div>
+        </div>
+        <div class="metric-card span2" style="background: linear-gradient(135deg, rgba(245,166,35,0.08) 0%, rgba(11,42,107,0.4) 100%); border-color: rgba(245,166,35,0.2);">
+          <div class="metric-card-val" style="font-size:2rem;">90 Days</div>
+          <div class="metric-card-label">Time to Measurable Value</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testimonials-bg">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;margin-bottom:0">
+      <span class="section-label">Client Stories</span>
+      <h2 class="section-title">What Leaders Are Saying</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">
+          "AAISUN's demand forecasting reduced our forecast error from 28% to under 6%
+          within 60 days. The ROI was visible before the implementation was even complete."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">RK</div>
+          <div>
+            <div class="author-name">Rajesh Kumar</div>
+            <div class="author-role">COO, Global Logistics Leader</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal" style="transition-delay:0.1s">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">
+          "Our claims processing team was skeptical about AI. Six months later, they
+          can't imagine operating without it. AAISUN handled change management brilliantly."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">PM</div>
+          <div>
+            <div class="author-name">Priya Mehta</div>
+            <div class="author-role">VP Claims, Leading Insurance Group</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal" style="transition-delay:0.2s">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">
+          "We evaluated 6 AI vendors. AAISUN was the only one that understood our
+          supply chain constraints as well as our IT architecture. That combination is rare."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AS</div>
+          <div>
+            <div class="author-name">Arjun Sharma</div>
+            <div class="author-role">CIO, Manufacturing Conglomerate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section id="demo" class="cta-section">
+  <div class="cta-inner">
+    <div class="reveal">
+      <span class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Ready to Begin?</span>
+<img src="Action1.webp" width="659" height ="364">
+
+      <h2 class="cta-title">
+        See AAISUN in Action.<br/>
+        <span style="color:var(--gold)">In Your Data.</span>
+      </h2>
+      <p class="cta-sub">
+        Book a personalized demo with our solutions team. We'll map AAISUN's capabilities
+        to your specific operational context — no generic pitch decks, no pressure.
+      </p>
+      <div class="cta-buttons">
+        <a href="#" class="btn-primary" style="padding:1rem 2.5rem;font-size:1rem">
+          Book a Demo
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#" class="btn-outline" style="padding:1rem 2.5rem;font-size:1rem">
+          Download Whitepaper
+        </a>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:3rem;margin-top:3rem;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:#334155">
+          <span style="color:#22c55e">✓</span> No commitment required
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:#334155">
+          <span style="color:#22c55e">✓</span> Response within 24 hours
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:#334155">
+          <span style="color:#22c55e">✓</span> GDPR & SOC 2 compliant
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <a href="#" class="logo" style="margin-bottom:1rem;display:inline-flex">
+          <svg width="22" height="22" viewBox="0 0 42 42" fill="none">
+            <img src="Aaisun.jpg" width="59" height ="64">
+            <circle cx="21" cy="21" r="4" fill="#F5A623" opacity="0.8"/>
+          </svg>
+          <span class="logo-text" style="font-size:1.2rem">Aaisun</span></span>
+        </a>
+        <p class="footer-brand-desc">
+           AI Solutions for Supply Chain and Insurance. 
+        </p>
+        <div style="margin-top:1.5rem;display:flex;gap:0.75rem">
+          <a href="#" class="logo">
+      <svg width="22" height="22" viewBox="0 0 42 42" fill="none">
+        
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Solutions</div>
+        <ul class="footer-links">
+          <li><a href="#">Demand Forecasting</a></li>
+          <li><a href="#">Inventory Optimization</a></li>
+          <li><a href="#">Claims Automation</a></li>
+          <li><a href="#">Fraud Detection</a></li>
+          <li><a href="#">Predictive Analytics</a></li>
+          <li><a href="#">Generative AI</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About AAISUN</a></li>
+          <li><a href="#">Leadership Team</a></li>
+          <li><a href="#">Case Studies</a></li>
+          <li><a href="#">Insights & Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <ul class="footer-links">
+          <li><a href="#">Book a Demo</a></li>
+          <li><a href="#">Request Consultation</a></li>
+          <li><a href="mailto:dsp0405pavan@aaisun.com">dsp0405pavan@aaisun.com</a></li>
+          <li><a href="#">Partner With Us</a></li>
+          <li><a href="#">Support Portal</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 AAISUN Technologies Pvt. Ltd. All rights reserved.</span>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Cookie Settings</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== SCROLL REVEAL =====
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ===== TABS =====
+  function setTab(btn, tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    btn.classList.add('active');
+    document.getElementById(tabId).style.display = 'grid';
+    document.querySelectorAll('#' + tabId + ' .reveal').forEach(el => {
+      el.classList.remove('visible');
+      setTimeout(() => el.classList.add('visible'), 50);
+    });
+  }
+
+  // ===== NAV SCROLL =====
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 50) {
+      nav.style.background = 'rgba(6, 14, 34, 0.97)';
+    } else {
+      nav.style.background = 'rgba(6, 14, 34, 0.85)';
+    }
+  });
+
+  // ===== CHART ANIMATION =====
+  const bars = document.querySelectorAll('.bar');
+  bars.forEach((bar, i) => {
+    const h = parseInt(bar.style.height);
+    bar.style.height = '5%';
+    setTimeout(() => {
+      bar.style.transition = 'height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      bar.style.height = h + '%';
+    }, 800 + i * 80);
+  });
+
+  // ===== SMOOTH SCROLL =====
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>

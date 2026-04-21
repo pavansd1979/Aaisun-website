@@ -1,0 +1,24 @@
+{
+  "name": "aaisun-website",
+  "version": "1.0.0",
+  "description": "A modern AI-driven website starter",
+  "scripts": {
+    "build": "npx postcss styles.css -o dist/styles.css",
+    "watch": "npx postcss styles.css -o dist/styles.css --watch",
+    "dev": "npx http-server",
+    "start": "npx http-server"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.27"
+  },
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
